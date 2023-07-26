@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "427624094170",
+    "project_id": "zeeyou-164ed",
+    "storage_bucket": "zeeyou-164ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427624094170:android:5c775835f8d9d0b76a88e3",
+        "android_client_info": {
+          "package_name": "com.example.zeeyou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "427624094170-t33tnre7f38vq4o6eq3bp35pnlmkc3ok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyTJpGg7vsz8QzICrBqCYn2wvI2sbB68M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "427624094170-k0offfj5ornpmviae4a7ld9c5d2j0urv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "427624094170-8jvqhhj3h0bndneh6koc5uk5urj8mac7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.zeeyou.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
