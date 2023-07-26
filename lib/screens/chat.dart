@@ -19,8 +19,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
     fcm.subscribeToTopic('chat');
 
-    final token = await fcm.getToken();
-    print(token); // could send this to backend
+    // final token = await fcm.getToken();
+    // print(token); // could send this to backend
   }
 
   @override
