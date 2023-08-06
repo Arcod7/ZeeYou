@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:zeeyou/models/event.dart';
 
-// A MessageBubble for showing a single chat message on the ChatScreen.
 class MessageBubble extends StatelessWidget {
-  // Create a message bubble which is meant to be the first in the sequence.
   const MessageBubble.first({
     super.key,
     required this.userImage,
@@ -11,37 +10,26 @@ class MessageBubble extends StatelessWidget {
     required this.messageId,
     required this.message,
     required this.isMe,
+    required this.event,
   }) : isFirstInSequence = true;
 
-  // Create a amessage bubble that continues the sequence.
   const MessageBubble.next({
     super.key,
     required this.message,
     required this.messageId,
     required this.isMe,
+    required this.event,
   })  : isFirstInSequence = false,
         userImage = null,
         username = null;
 
-  // Whether or not this message bubble is the first in a sequence of messages
-  // from the same user.
-  // Modifies the message bubble slightly for these different cases - only
-  // shows user image for the first message from the same user, and changes
-  // the shape of the bubble for messages thereafter.
   final bool isFirstInSequence;
-
-  // Image of the user to be displayed next to the bubble.
-  // Not required if the message is not the first in a sequence.
   final String? userImage;
-
-  // Username of the user.
-  // Not required if the message is not the first in a sequence.
   final String? username;
   final String messageId;
   final String message;
-
-  // Controls how the MessageBubble will be aligned.
   final bool isMe;
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +53,7 @@ class MessageBubble extends StatelessWidget {
         GestureDetector(
           onDoubleTap: () {
             FirebaseFirestore.instance
-                .collection('chat')
+                .collection('chat_${event.id}')
                 .doc(messageId)
                 .delete();
           },

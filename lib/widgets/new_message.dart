@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zeeyou/models/event.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({super.key});
+  const NewMessage({super.key, required this.event});
+
+  final Event event;
 
   @override
   State<NewMessage> createState() => _NewMessageState();
 }
 
 class _NewMessageState extends State<NewMessage> {
-  var _messageController = TextEditingController();
+  final _messageController = TextEditingController();
 
   @override
   void dispose() {
@@ -32,8 +35,10 @@ class _NewMessageState extends State<NewMessage> {
         .collection('users')
         .doc(user.uid)
         .get();
+    // print(user.uid);
+    // print(userData.data());
 
-    FirebaseFirestore.instance.collection('chat').add({
+    FirebaseFirestore.instance.collection('chat_${widget.event.id}').add({
       'text': enteredMessage,
       'createdAt': Timestamp.now(),
       'userId': user.uid,

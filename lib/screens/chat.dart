@@ -1,3 +1,4 @@
+import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/widgets/chat_messages.dart';
 import 'package:zeeyou/widgets/new_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,7 +6,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({super.key, required this.event});
+
+  final Event event;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -17,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     await fcm.requestPermission();
 
-    fcm.subscribeToTopic('chat');
+    fcm.subscribeToTopic('chat_${widget.event.id}');
 
     // final token = await fcm.getToken();
     // print(token); // could send this to backend
@@ -34,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CallotChat'),
+        title: Text(widget.event.title),
         actions: [
           IconButton(
             onPressed: () {
@@ -45,10 +48,10 @@ class _ChatScreenState extends State<ChatScreen> {
           )
         ],
       ),
-      body: const Column(
+      body: Column(
         children: [
-          Expanded(child: ChatMessages()),
-          NewMessage(),
+          Expanded(child: ChatMessages(event: widget.event)),
+          NewMessage(event: widget.event),
         ],
       ),
     );
