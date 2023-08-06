@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/providers/events_provider.dart';
+import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/widgets/add_event_button.dart';
 import 'package:zeeyou/widgets/event_card.dart';
 import 'package:zeeyou/widgets/user_icon.dart';
@@ -23,7 +24,11 @@ class HomeScreen extends ConsumerWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => ChatScreen(
+                        chatId: 'staff', title: 'Discute avec nous !')));
+              },
               icon: Icon(Icons.settings_outlined,
                   color: Theme.of(context).colorScheme.onPrimary)),
           IconButton(

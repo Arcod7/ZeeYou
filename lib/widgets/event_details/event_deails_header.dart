@@ -4,7 +4,7 @@ import 'package:zeeyou/tools/string_extension.dart';
 import 'package:zeeyou/widgets/event_details/details_date.dart';
 import 'package:zeeyou/widgets/event_details/details_location.dart';
 
-class EventDetailsHeader extends StatelessWidget {
+class EventDetailsHeader extends StatefulWidget {
   const EventDetailsHeader({
     super.key,
     required this.event,
@@ -12,6 +12,11 @@ class EventDetailsHeader extends StatelessWidget {
 
   final Event event;
 
+  @override
+  State<EventDetailsHeader> createState() => _EventDetailsHeaderState();
+}
+
+class _EventDetailsHeaderState extends State<EventDetailsHeader> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +29,7 @@ class EventDetailsHeader extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.favorite,
-                color: event.color,
+                color: widget.event.color,
               ),
               onPressed: () {},
             ),
@@ -34,27 +39,29 @@ class EventDetailsHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  event.type.name.capitalize(),
+                  widget.event.type.name.capitalize(),
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge!
                       .copyWith(color: Colors.black26),
                 ),
-                Text(event.title,
+                Text(widget.event.title,
                     style: Theme.of(context).textTheme.titleLarge),
-                Text(event.description ?? 'ya R à dire'),
+                Text(widget.event.description ?? 'ya R à dire'),
                 EventDetailsDate(
-                  color: event.color,
+                  color: widget.event.color,
                   onDatePicked: (date) {},
-                  date: event.date ?? DateTime.now(),
+                  date: widget.event.date ?? DateTime.now(),
                 ),
                 EventDetailsLocation(
-                  color: event.color,
-                  lightColor: event.lightColor,
+                  color: widget.event.color,
+                  lightColor: widget.event.lightColor,
                   onLocationPicked: (newLoc) {
-                    event.location = newLoc;
+                    setState(() {
+                      widget.event.location = newLoc;
+                    });
                   },
-                  location: event.location,
+                  location: widget.event.location,
                 ),
               ],
             ),

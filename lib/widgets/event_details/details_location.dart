@@ -109,7 +109,9 @@ class _EventDetailsLocationState extends State<EventDetailsLocation> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    if (widget.creatingEvent) {
+      _getCurrentLocation();
+    }
   }
 
   @override

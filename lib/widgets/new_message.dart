@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zeeyou/models/event.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({super.key, required this.event});
+  const NewMessage({super.key, required this.chatId});
 
-  final Event event;
+  final String chatId;
 
   @override
   State<NewMessage> createState() => _NewMessageState();
@@ -38,7 +37,7 @@ class _NewMessageState extends State<NewMessage> {
     // print(user.uid);
     // print(userData.data());
 
-    FirebaseFirestore.instance.collection('chat_${widget.event.id}').add({
+    FirebaseFirestore.instance.collection('chat_${widget.chatId}').add({
       'text': enteredMessage,
       'createdAt': Timestamp.now(),
       'userId': user.uid,

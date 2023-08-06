@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:zeeyou/models/event.dart';
 
 class MessageBubble extends StatelessWidget {
   const MessageBubble.first({
@@ -10,7 +9,7 @@ class MessageBubble extends StatelessWidget {
     required this.messageId,
     required this.message,
     required this.isMe,
-    required this.event,
+    required this.chatId,
   }) : isFirstInSequence = true;
 
   const MessageBubble.next({
@@ -18,7 +17,7 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.messageId,
     required this.isMe,
-    required this.event,
+    required this.chatId,
   })  : isFirstInSequence = false,
         userImage = null,
         username = null;
@@ -29,7 +28,7 @@ class MessageBubble extends StatelessWidget {
   final String messageId;
   final String message;
   final bool isMe;
-  final Event event;
+  final String chatId;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +52,7 @@ class MessageBubble extends StatelessWidget {
         GestureDetector(
           onDoubleTap: () {
             FirebaseFirestore.instance
-                .collection('chat_${event.id}')
+                .collection('chat_$chatId')
                 .doc(messageId)
                 .delete();
           },
