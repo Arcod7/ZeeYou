@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/models/event.dart';
+import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
 
 class EventDetailsScreen extends StatelessWidget {
@@ -34,7 +36,28 @@ class EventDetailsScreen extends StatelessWidget {
                     const BorderRadius.vertical(top: Radius.circular(44)),
                 color: Theme.of(context).colorScheme.background,
               ),
-              child: EventDetailsHeader(event: event),
+              child: Column(
+                children: [
+                  EventDetailsHeader(event: event),
+                  ElevatedButton.icon(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(event.lightColor),
+                      foregroundColor: MaterialStateProperty.all(event.color),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) =>
+                              ChatScreen(chatId: event.id, title: event.title),
+                        ),
+                      );
+                    },
+                    icon: Icon(MdiIcons.chat),
+                    label: const Text('Messages'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

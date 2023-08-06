@@ -1,13 +1,12 @@
-import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/widgets/message_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessages extends StatelessWidget {
-  const ChatMessages({super.key, required this.event});
+  const ChatMessages({super.key, required this.chatId});
 
-  final Event event;
+  final String chatId;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,7 @@ class ChatMessages extends StatelessWidget {
 
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('chat_${event.id}')
+          .collection('chat_$chatId')
           .orderBy('createdAt', descending: true)
           .snapshots(),
       builder: (ctx, chatSnapshots) {
@@ -59,14 +58,14 @@ class ChatMessages extends StatelessWidget {
 
             if (nextUserIsSame) {
               return MessageBubble.next(
-                event: event,
+                chatId: chatId,
                 message: chatMessage['text'],
                 messageId: messageId,
                 isMe: authenticatedUser.uid == currentMessageUserId,
               );
             } else {
               return MessageBubble.first(
-                event: event,
+                chatId: chatId,
                 userImage: chatMessage['userImage'],
                 username: chatMessage['username'],
                 message: chatMessage['text'],

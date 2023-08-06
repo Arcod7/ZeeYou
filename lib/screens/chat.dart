@@ -1,14 +1,13 @@
-import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/widgets/chat_messages.dart';
 import 'package:zeeyou/widgets/new_message.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.event});
+  const ChatScreen({super.key, required this.chatId, required this.title});
 
-  final Event event;
+  final String title;
+  final String chatId;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -20,7 +19,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     await fcm.requestPermission();
 
-    fcm.subscribeToTopic('chat_${widget.event.id}');
+    fcm.subscribeToTopic('chat_${widget.chatId}');
 
     // final token = await fcm.getToken();
     // print(token); // could send this to backend
@@ -37,21 +36,12 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event.title),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            icon: Icon(Icons.exit_to_app,
-                color: Theme.of(context).colorScheme.primary),
-          )
-        ],
+        title: Text(widget.title),
       ),
       body: Column(
         children: [
-          Expanded(child: ChatMessages(event: widget.event)),
-          NewMessage(event: widget.event),
+          Expanded(child: ChatMessages(chatId: widget.chatId)),
+          NewMessage(chatId: widget.chatId),
         ],
       ),
     );
