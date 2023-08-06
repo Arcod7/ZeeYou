@@ -4,9 +4,9 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 exports.myFunction = functions.firestore
-  .document("chat/{messageId}")
+  .document("chata/{messageId}")
   .onCreate((snapshot, context) => {
-    return admin.messaging().sendToTopic("chat", {
+    return admin.messaging().sendToTopic("chata", {
       notification: {
         title: snapshot.data()["username"],
         body: snapshot.data()["text"],
