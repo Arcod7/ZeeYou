@@ -38,7 +38,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
   String? _enteredDescription;
   double _enteredMaxPeople = 2.0;
   double _enteredColorHue = 1.0;
-  EventType _enteredEventType = EventType.none;
+  EventType _enteredEventType = EventType.aucun;
   DateTime? _enteredDate;
   PlaceLocation? _enteredLocation;
   Color _enteredColor = changeColorLigntness(
@@ -86,7 +86,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
   }
 
-  void _submit() async {
+  void _submit() {
     final isValid = _form.currentState!.validate();
 
     if (!isValid) {
@@ -95,17 +95,54 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     _form.currentState!.save();
 
-    Navigator.of(context).pop(Event(
-      title: _enteredTitle,
-      description: _enteredDescription,
-      organizedBy: myUserName,
-      type: _enteredEventType,
-      icon: _enteredIcon,
-      color: _enteredColor,
-      date: _enteredDate,
-      location: _enteredLocation,
-      id: const Uuid().v4(),
-    ));
+    final newId = const Uuid().v4();
+
+    // Faudrait d'abbord vérifier que l'id existe pas déjà
+    FirebaseFirestore.instance.collection('events').add({
+      'title': _enteredTitle,
+      ..._enteredDescription != null
+          ? {'description': _enteredDescription}
+          : {},
+      'organizedBy': myUserName,
+      'type': _enteredEventType.toString(),
+      'icon': {
+        'codePoint': _enteredIcon.codePoint,
+        'fontFamily': _enteredIcon.fontFamily,
+        'fontPackage': _enteredIcon.fontPackage,
+      },
+      'color': [_enteredColor.red, _enteredColor.green, _enteredColor.blue],
+      ..._enteredDate != null
+          ? {'date': Timestamp.fromDate(_enteredDate!)}
+          : {},
+      'createdAt': Timestamp.now(),
+      'updatedAt': Timestamp.now(),
+      ..._enteredLocation != null
+          ? {
+              'location': {
+                'lat': _enteredLocation!.latitude,
+                'lng': _enteredLocation!.longitude,
+                'address': _enteredLocation!.address,
+              }
+            }
+          : {},
+      // 'location_address': _enteredLocation.address,
+      // 'location_address': _enteredLocation.address,
+      'id': newId,
+    });
+
+    Navigator.of(context).pop();
+
+    // Navigator.of(context).pop(Event(
+    //   title: _enteredTitle,
+    //   description: _enteredDescription,
+    //   organizedBy: myUserName,
+    //   type: _enteredEventType,
+    //   icon: _enteredIcon,
+    //   color: _enteredColor,
+    //   date: _enteredDate,
+    //   location: _enteredLocation,
+    //   id: const Uuid().v4(),
+    // ));
   }
 
   @override
@@ -142,6 +179,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 onSaved: (value) {
                   _enteredTitle = value!;
                 },
+                textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(height: 10),
               TextFormField(
@@ -150,13 +188,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 onSaved: (value) {
                   _enteredDescription = value;
                 },
+                textCapitalization: TextCapitalization.sentences,
               ),
               EventDetailsDate(
                 color: _enteredColor,
                 onDatePicked: (date) {
                   _enteredDate = date;
                 },
-                date: DateTime.now(),
               ),
               EventDetailsLocation(
                 color: _enteredColor,
@@ -183,7 +221,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 },
                 label: '${_enteredMaxPeople.round()}',
               ),
-              inputLabel('Color: ', 0),
+              inputLabel('Couleur: ', 0),
               Slider.adaptive(
                 max: 255,
                 activeColor: _enteredColor,

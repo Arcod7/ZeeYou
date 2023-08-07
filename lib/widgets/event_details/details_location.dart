@@ -92,12 +92,15 @@ class _EventDetailsLocationState extends State<EventDetailsLocation> {
   }
 
   void _selectOnMap() async {
-    final pickedLocation = await Navigator.of(context).push<LatLng>(
-        MaterialPageRoute(
+    final pickedLocation =
+        await Navigator.of(context).push<LatLng>(MaterialPageRoute(
             builder: (ctx) => MapScreen(
                 location: widget.location ??
                     const PlaceLocation(
-                        latitude: 1.0, longitude: 1.0, address: ''))));
+                      latitude: 46.068613,
+                      longitude: 6.568107,
+                      address: '',
+                    ))));
 
     if (pickedLocation == null) {
       return;

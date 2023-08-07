@@ -51,7 +51,7 @@ class _EventDetailsHeaderState extends State<EventDetailsHeader> {
                 EventDetailsDate(
                   color: widget.event.color,
                   onDatePicked: (date) {},
-                  date: widget.event.date ?? DateTime.now(),
+                  date: widget.event.date,
                 ),
                 EventDetailsLocation(
                   color: widget.event.color,
