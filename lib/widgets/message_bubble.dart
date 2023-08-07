@@ -10,6 +10,7 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.isMe,
     required this.chatId,
+    required this.chatType,
   }) : isFirstInSequence = true;
 
   const MessageBubble.next({
@@ -18,6 +19,7 @@ class MessageBubble extends StatelessWidget {
     required this.messageId,
     required this.isMe,
     required this.chatId,
+    required this.chatType,
   })  : isFirstInSequence = false,
         userImage = null,
         username = null;
@@ -29,6 +31,7 @@ class MessageBubble extends StatelessWidget {
   final String message;
   final bool isMe;
   final String chatId;
+  final String chatType;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,9 @@ class MessageBubble extends StatelessWidget {
         GestureDetector(
           onDoubleTap: () {
             FirebaseFirestore.instance
-                .collection('chat_$chatId')
+                .collection('chats')
+                .doc(chatType)
+                .collection(chatId)
                 .doc(messageId)
                 .delete();
           },

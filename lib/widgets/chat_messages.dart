@@ -4,8 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessages extends StatelessWidget {
-  const ChatMessages({super.key, required this.chatId});
+  const ChatMessages({super.key, required this.chatType, required this.chatId});
 
+  final String chatType;
   final String chatId;
 
   @override
@@ -14,7 +15,9 @@ class ChatMessages extends StatelessWidget {
 
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('chat_$chatId')
+          .collection('chats')
+          .doc(chatType)
+          .collection(chatId)
           .orderBy('createdAt', descending: true)
           .snapshots(),
       builder: (ctx, chatSnapshots) {
@@ -59,6 +62,7 @@ class ChatMessages extends StatelessWidget {
             if (nextUserIsSame) {
               return MessageBubble.next(
                 chatId: chatId,
+                chatType: chatType,
                 message: chatMessage['text'],
                 messageId: messageId,
                 isMe: authenticatedUser.uid == currentMessageUserId,
@@ -66,6 +70,7 @@ class ChatMessages extends StatelessWidget {
             } else {
               return MessageBubble.first(
                 chatId: chatId,
+                chatType: chatType,
                 userImage: chatMessage['userImage'],
                 username: chatMessage['username'],
                 message: chatMessage['text'],

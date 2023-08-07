@@ -6,7 +6,7 @@ import 'package:zeeyou/tools/hsl_color.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 
 enum EventType {
-  none,
+  aucun,
   soiree,
   anniversaire,
   mariage,

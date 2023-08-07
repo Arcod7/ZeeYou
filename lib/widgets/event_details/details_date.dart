@@ -6,30 +6,27 @@ class EventDetailsDate extends StatefulWidget {
   const EventDetailsDate({
     required this.color,
     required this.onDatePicked,
-    required this.date,
+    this.date,
     super.key,
   });
 
   final Color color;
   final void Function(DateTime date) onDatePicked;
-  final DateTime date;
+  final DateTime? date;
 
   @override
   State<EventDetailsDate> createState() => _EventDetailsDateState();
 }
 
 class _EventDetailsDateState extends State<EventDetailsDate> {
-  DateTime? selectedDate;
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate) {
+    if (picked != null) {
       setState(() {
-        selectedDate = picked;
         widget.onDatePicked(picked);
       });
     }
@@ -52,8 +49,8 @@ class _EventDetailsDateState extends State<EventDetailsDate> {
         ),
       ),
       title: Text(
-        selectedDate != null
-            ? DateFormat.yMMMMEEEEd().format(selectedDate!)
+        widget.date != null
+            ? DateFormat.yMMMMEEEEd().format(widget.date!)
             : 'Choisis une date ;)',
         style: TextStyle(
           color: widget.color,

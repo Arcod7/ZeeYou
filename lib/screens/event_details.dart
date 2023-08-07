@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/models/event.dart';
@@ -8,9 +9,11 @@ class EventDetailsScreen extends StatelessWidget {
   const EventDetailsScreen({
     super.key,
     required this.event,
+    required this.databaseId,
   });
 
   final Event event;
+  final String databaseId;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +22,19 @@ class EventDetailsScreen extends StatelessWidget {
         backgroundColor: event.lightColor,
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_horiz),
+            onPressed: () {
+              FirebaseFirestore.instance
+                  .collection('events')
+                  .doc(databaseId)
+                  .delete();
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.delete_outline),
+          ),
+          PopupMenuButton(
+            itemBuilder: (ctx) => [
+              PopupMenuItem(child: const Text('Donate ?'), onTap: () {}),
+            ],
           ),
         ],
       ),
@@ -48,8 +62,11 @@ class EventDetailsScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (ctx) =>
-                              ChatScreen(chatId: event.id, title: event.title),
+                          builder: (ctx) => ChatScreen(
+                            chatType: 'event_chat',
+                            chatId: event.id,
+                            title: event.title,
+                          ),
                         ),
                       );
                     },

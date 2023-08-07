@@ -1,12 +1,17 @@
 import 'package:zeeyou/widgets/chat_messages.dart';
 import 'package:zeeyou/widgets/new_message.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.chatId, required this.title});
+  const ChatScreen({
+    required this.title,
+    required this.chatType,
+    required this.chatId,
+    super.key,
+  });
 
   final String title;
+  final String chatType;
   final String chatId;
 
   @override
@@ -14,22 +19,22 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  void setupPushNotifications() async {
-    final fcm = FirebaseMessaging.instance;
+  // void setupPushNotifications() async {
+  //   final fcm = FirebaseMessaging.instance;
 
-    await fcm.requestPermission();
+  // await fcm.requestPermission();
 
-    fcm.subscribeToTopic('chat_${widget.chatId}');
+  // fcm.subscribeToTopic('chat_${widget.chatId}');
 
-    // final token = await fcm.getToken();
-    // print(token); // could send this to backend
-  }
+  // final token = await fcm.getToken();
+  // print(token); // could send this to backend
+  // }
 
   @override
   void initState() {
     super.initState();
 
-    setupPushNotifications();
+    // setupPushNotifications();
   }
 
   @override
@@ -40,8 +45,16 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          Expanded(child: ChatMessages(chatId: widget.chatId)),
-          NewMessage(chatId: widget.chatId),
+          Expanded(
+            child: ChatMessages(
+              chatId: widget.chatId,
+              chatType: widget.chatType,
+            ),
+          ),
+          NewMessage(
+            chatId: widget.chatId,
+            chatType: widget.chatType,
+          ),
         ],
       ),
     );
