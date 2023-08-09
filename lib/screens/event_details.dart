@@ -2,21 +2,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/models/event.dart';
+import 'package:zeeyou/screens/users_list.dart';
 import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
 
 class EventDetailsScreen extends StatelessWidget {
-  const EventDetailsScreen({
+  EventDetailsScreen({
     super.key,
     required this.event,
-    required this.databaseId,
   });
 
   final Event event;
-  final String databaseId;
+
+  late List<String>? userList;
+  Future<void> _getUserList() async {
+    final eventData = await FirebaseFirestore.instance
+        .collection('events')
+        .doc(event.id)
+        .get();
+    userList = List.castFrom(eventData.data()!['user_list'] as List);
+  }
 
   @override
   Widget build(BuildContext context) {
+    _getUserList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: event.lightColor,
@@ -25,7 +34,7 @@ class EventDetailsScreen extends StatelessWidget {
             onPressed: () {
               FirebaseFirestore.instance
                   .collection('events')
-                  .doc(databaseId)
+                  .doc(event.id)
                   .delete();
               Navigator.of(context).pop();
             },
@@ -73,16 +82,59 @@ class EventDetailsScreen extends StatelessWidget {
                     icon: Icon(MdiIcons.chat),
                     label: const Text('Messages'),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final userIds = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (ctx) => UsersListScreen(
+                                title: 'Add users to your event !',
+                                filterNotIn: userList,
+                              ),
+                            ),
+                          );
+                          FirebaseFirestore.instance
+                              .collection('events')
+                              .doc(event.id)
+                              .update({
+                            "user_list": FieldValue.arrayUnion(userIds.toList())
+                          });
+                          _getUserList();
+                        },
+                        child: const Text('Add users'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final userIds = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (ctx) {
+                                return UsersListScreen(
+                                  title: 'Remove users to your event',
+                                  filterIn: userList,
+                                );
+                              },
+                            ),
+                          );
+                          FirebaseFirestore.instance
+                              .collection('events')
+                              .doc(event.id)
+                              .update({
+                            "user_list":
+                                FieldValue.arrayRemove(userIds.toList())
+                          });
+                          _getUserList();
+                        },
+                        child: const Text('Remove users'),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        // Column(
-        //   children: [
-        //     Text(event.title),
-        //   ],
-        // )
       ),
     );
   }

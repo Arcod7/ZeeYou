@@ -2,21 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/models/place.dart';
+import 'package:zeeyou/tools/sesson_manager.dart';
 import 'package:zeeyou/widgets/home/event_card.dart';
 
 class EventListStream extends StatelessWidget {
   const EventListStream({super.key});
 
-  Event _getEvent(final event) => Event(
+  Event _getEvent(final event, String eventId) => Event(
         title: event['title'],
         description: event['description'],
-        organizedBy: event['organizedBy'],
+        organizedBy: event['organizedByName'],
         type: EventType.values.firstWhere((e) => e.toString() == event['type']),
-        icon: IconData(
-          event['icon']['codePoint'],
-          fontFamily: event['icon']['fontFamily'],
-          fontPackage: event['icon']['fontPackage'],
-        ),
+        icon: event['icon'] != null
+            ? IconData(
+                event['icon']['codePoint'],
+                fontFamily: event['icon']['fontFamily'],
+                fontPackage: event['icon']['fontPackage'],
+              )
+            : null,
         color: Color.fromARGB(
           255,
           event['color'][0],
@@ -33,7 +36,7 @@ class EventListStream extends StatelessWidget {
                 address: event['location']['address'],
               )
             : null,
-        id: event['id'],
+        id: eventId,
       );
 
   @override
@@ -41,6 +44,7 @@ class EventListStream extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('events')
+            .where('user_list', arrayContains: loggedUserId)
             .orderBy('updatedAt', descending: true)
             .snapshots(),
         builder: (ctx, eventSnapshots) {
@@ -78,9 +82,10 @@ class EventListStream extends StatelessWidget {
               }
               index -= 1;
 
-              final loadedEvent = _getEvent(loadedEvents[index].data());
+              final loadedEvent =
+                  _getEvent(loadedEvents[index].data(), loadedEvents[index].id);
 
-              return EventCard(event: loadedEvent, databaseId: loadedEvents[index].id);
+              return EventCard(event: loadedEvent);
             },
           );
         });

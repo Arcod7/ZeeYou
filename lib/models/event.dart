@@ -20,9 +20,9 @@ class Event {
     this.description,
     this.date,
     this.location,
+    this.icon,
     required this.organizedBy,
     required this.type,
-    required this.icon,
     required this.color,
     this.isFavorite = false,
     required this.id,
@@ -37,11 +37,11 @@ class Event {
   final String? description;
   final DateTime? date;
   final String? formatedDate;
+  final IconData? icon;
   PlaceLocation? location;
   final String organizedBy;
   final EventType type;
   final String typeName;
-  final IconData icon;
   final Color color;
   final Color lightColor;
   final bool isFavorite;

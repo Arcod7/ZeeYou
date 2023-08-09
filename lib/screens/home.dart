@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/widgets/home/add_event_button.dart';
 import 'package:zeeyou/widgets/home/event_list_stream.dart';
+import 'package:zeeyou/widgets/home/more_button.dart';
 import 'package:zeeyou/widgets/user_icon.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -20,25 +19,7 @@ class HomeScreen extends ConsumerWidget {
         centerTitle: true,
         title: Text('ZeeYou',
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => const ChatScreen(
-                        chatType: 'staff_chat',
-                        chatId: 'staff',
-                        title: 'Discute avec nous !')));
-              },
-              icon: Icon(Icons.settings_outlined,
-                  color: Theme.of(context).colorScheme.onPrimary)),
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            icon: Icon(Icons.exit_to_app,
-                color: Theme.of(context).colorScheme.onPrimary),
-          )
-        ],
+        actions: const [MoreButton()],
       ),
       backgroundColor: Colors.blueGrey[50],
       body: const Padding(
