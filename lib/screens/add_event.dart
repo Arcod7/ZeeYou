@@ -1,14 +1,13 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
-import 'package:uuid/uuid.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/tools/hsl_color.dart';
+import 'package:zeeyou/tools/sesson_manager.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
 import 'package:zeeyou/widgets/event_details/details_date.dart';
@@ -31,10 +30,7 @@ class AddEventScreen extends StatefulWidget {
 class _AddEventScreenState extends State<AddEventScreen> {
   final _form = GlobalKey<FormState>();
 
-  final myUid = FirebaseAuth.instance.currentUser!.uid;
-
   String _enteredTitle = '';
-  String myUserName = '';
   String? _enteredDescription;
   double _enteredMaxPeople = 2.0;
   double _enteredColorHue = 1.0;
@@ -46,14 +42,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     0.3,
   );
   Color get _enteredColorLight => changeColorLigntness(_enteredColor, 0.85);
-  IconData _enteredIcon = Icons.search;
-
-  void _getUsername() async {
-    final userData =
-        await FirebaseFirestore.instance.collection('users').doc(myUid).get();
-
-    myUserName = userData.data()!['username'];
-  }
+  IconData? _enteredIcon;
 
   void updateColorHue(double newColorHue) {
     setState(() {
@@ -86,7 +75,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
   }
 
-  void _submit() {
+  void _submit() async {
     final isValid = _form.currentState!.validate();
 
     if (!isValid) {
@@ -95,7 +84,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     _form.currentState!.save();
 
-    final newId = const Uuid().v4();
+    final username = await SessionManager().getUsername();
 
     // Faudrait d'abbord vérifier que l'id existe pas déjà
     FirebaseFirestore.instance.collection('events').add({
@@ -103,13 +92,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
       ..._enteredDescription != null
           ? {'description': _enteredDescription}
           : {},
-      'organizedBy': myUserName,
+      'organizedBy': loggedUserId,
+      'organizedByName': username,
       'type': _enteredEventType.toString(),
-      'icon': {
-        'codePoint': _enteredIcon.codePoint,
-        'fontFamily': _enteredIcon.fontFamily,
-        'fontPackage': _enteredIcon.fontPackage,
-      },
+      ..._enteredIcon != null
+          ? {
+              'icon': {
+                'codePoint': _enteredIcon!.codePoint,
+                'fontFamily': _enteredIcon!.fontFamily,
+                'fontPackage': _enteredIcon!.fontPackage,
+              }
+            }
+          : {},
       'color': [_enteredColor.red, _enteredColor.green, _enteredColor.blue],
       ..._enteredDate != null
           ? {'date': Timestamp.fromDate(_enteredDate!)}
@@ -125,9 +119,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               }
             }
           : {},
-      // 'location_address': _enteredLocation.address,
-      // 'location_address': _enteredLocation.address,
-      'id': newId,
+      'user_list': [loggedUserId],
     });
 
     Navigator.of(context).pop();
@@ -147,7 +139,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   @override
   void initState() {
-    _getUsername();
     updateColorHue(Random().nextDouble() * 255);
     super.initState();
   }
@@ -159,6 +150,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
         backgroundColor: _enteredColorLight,
         title: const Text('Crée ton événement !'),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ZeeButton(
+          text: 'Créer cet événement',
+          onPressed: _submit,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
         child: Form(
           key: _form,
@@ -192,19 +191,22 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
               EventDetailsDate(
                 color: _enteredColor,
+                date: _enteredDate,
                 onDatePicked: (date) {
-                  _enteredDate = date;
+                  setState(() {
+                    _enteredDate = date;
+                  });
                 },
               ),
               EventDetailsLocation(
                 color: _enteredColor,
                 lightColor: _enteredColorLight,
+                location: _enteredLocation,
                 onLocationPicked: (newLoc) {
                   setState(() {
                     _enteredLocation = newLoc;
                   });
                 },
-                location: _enteredLocation,
                 creatingEvent: true,
               ),
               inputLabel(
@@ -245,13 +247,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
               const SizedBox(height: 20),
               ElevatedButton.icon(
                   onPressed: _pickIcon,
-                  icon: Icon(_enteredIcon),
+                  icon: Icon(_enteredIcon ?? Icons.search),
                   label: const Text('Choisis une icône')),
               const SizedBox(height: 20),
-              ZeeButton(
-                text: 'Créer cet événement',
-                onPressed: _submit,
-              ),
             ]),
           ),
         ),

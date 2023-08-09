@@ -46,26 +46,31 @@ class EventCard extends StatelessWidget {
   const EventCard({
     super.key,
     required this.event,
-    required this.databaseId,
   });
 
   final Event event;
-  final String databaseId;
 
   String _getTimeDifference(DateTime date) {
     final String currentDate = DateFormat.yMMMMEEEEd().format(date);
     final difference = date.difference(DateTime.now());
-    final String timeFromNow;
+    String returnString = '';
 
-    if (difference.inHours <= 1) {
-      timeFromNow = 'in ${difference.inMinutes.toString()} minutes';
-    } else if (difference.inDays <= 1) {
-      timeFromNow = 'in ${difference.inHours.toString()} hours';
-    } else {
-      timeFromNow = 'in ${difference.inDays.toString()} days';
+    if (!difference.isNegative) {
+      returnString += 'in ';
     }
-    // return DateFormat.EEEE().format(date) +
-    return '$currentDate\n$timeFromNow';
+    if (difference.abs().inHours <= 1) {
+      returnString += '${difference.abs().inMinutes.toString()} minutes';
+    } else if (difference.abs().inDays <= 1) {
+      returnString += '${difference.abs().inHours.toString()} hours';
+    } else {
+      returnString += '${difference.abs().inDays.toString()} days';
+    }
+    if (difference.isNegative) {
+      returnString += ' ago';
+    }
+
+    return returnString;
+    // return '$currentDate\n$returnString';
   }
 
   @override
@@ -83,8 +88,7 @@ class EventCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (ctx) => EventDetailsScreen(
-                    event: event,
-                    databaseId: databaseId))); // ChatScreen(event: event)));
+                    event: event))); // ChatScreen(event: event)));
           },
           visualDensity: const VisualDensity(vertical: 3),
           leading: event.date != null
@@ -96,6 +100,7 @@ class EventCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: event.lightColor,
                   ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     _getTimeDifference(event.date!),
                     style: const TextStyle(color: Colors.black87),
@@ -108,15 +113,16 @@ class EventCard extends StatelessWidget {
           subtitle: Text(
               '${event.type.name.capitalize()} organisé par ${event.organizedBy}'),
         ),
-        Positioned(
-          bottom: 10,
-          right: 10,
-          child: Icon(
-            event.icon,
-            size: 22,
-            color: event.color,
+        if (event.icon != null)
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: Icon(
+              event.icon,
+              size: 22,
+              color: event.color,
+            ),
           ),
-        ),
         Positioned(
           top: -2,
           right: -2,
