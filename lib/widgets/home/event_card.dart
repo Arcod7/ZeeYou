@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/event_details.dart';
 import 'package:zeeyou/tools/string_extension.dart';
@@ -51,7 +50,7 @@ class EventCard extends StatelessWidget {
   final Event event;
 
   String _getTimeDifference(DateTime date) {
-    final String currentDate = DateFormat.yMMMMEEEEd().format(date);
+    // final String currentDate = DateFormat.yMMMMEEEEd().format(date);
     final difference = date.difference(DateTime.now());
     String returnString = '';
 

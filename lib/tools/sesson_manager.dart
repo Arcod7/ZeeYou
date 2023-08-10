@@ -3,13 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 final String loggedUserId = FirebaseAuth.instance.currentUser!.uid;
 
-class SessionManager {
-  Future<String> getUsername() async {
+Future<String> getUsername(String userId) async {
     final userData = await FirebaseFirestore.instance
         .collection('users')
-        .doc(loggedUserId)
+        .doc(userId)
         .get();
 
     return userData.data()!['username'];
   }
-}
