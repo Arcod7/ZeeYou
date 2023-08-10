@@ -84,7 +84,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
     _form.currentState!.save();
 
-    final username = await SessionManager().getUsername();
+    final username = await getUsername(loggedUserId);
 
     // Faudrait d'abbord vérifier que l'id existe pas déjà
     FirebaseFirestore.instance.collection('events').add({
@@ -122,7 +122,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
       'user_list': [loggedUserId],
     });
 
-    Navigator.of(context).pop();
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
 
     // Navigator.of(context).pop(Event(
     //   title: _enteredTitle,

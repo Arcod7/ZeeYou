@@ -4,28 +4,44 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/users_list.dart';
 import 'package:zeeyou/screens/chat.dart';
+import 'package:zeeyou/tools/sesson_manager.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
 
 class EventDetailsScreen extends StatelessWidget {
-  EventDetailsScreen({
+  const EventDetailsScreen({
     super.key,
     required this.event,
   });
 
   final Event event;
 
-  late List<String>? userList;
-  Future<void> _getUserList() async {
-    final eventData = await FirebaseFirestore.instance
-        .collection('events')
-        .doc(event.id)
-        .get();
-    userList = List.castFrom(eventData.data()!['user_list'] as List);
-  }
-
   @override
   Widget build(BuildContext context) {
-    _getUserList();
+    List<String>? userList;
+    Future<void> getUserList() async {
+      final eventData = await FirebaseFirestore.instance
+          .collection('events')
+          .doc(event.id)
+          .get();
+      userList = List.castFrom(eventData.data()!['user_list'] as List);
+    }
+
+    Future<String> getUserNamesFromSet(Set<String> userIds) async {
+      final usernamesList = await Future.wait(
+          userIds.map((userId) async => await getUsername(userId)));
+      return usernamesList.join(', ');
+    }
+
+    void showSnackBarUserAdded(Set<String> userIds, String lastWord) async {
+      final usernames = await getUserNamesFromSet(userIds);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('$usernames $lastWord')));
+      }
+    }
+
+    getUserList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: event.lightColor,
@@ -95,13 +111,14 @@ class EventDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           );
-                          FirebaseFirestore.instance
+                          await FirebaseFirestore.instance
                               .collection('events')
                               .doc(event.id)
                               .update({
                             "user_list": FieldValue.arrayUnion(userIds.toList())
                           });
-                          _getUserList();
+                          getUserList();
+                          showSnackBarUserAdded(userIds, 'added');
                         },
                         child: const Text('Add users'),
                       ),
@@ -117,14 +134,15 @@ class EventDetailsScreen extends StatelessWidget {
                               },
                             ),
                           );
-                          FirebaseFirestore.instance
+                          await FirebaseFirestore.instance
                               .collection('events')
                               .doc(event.id)
                               .update({
                             "user_list":
                                 FieldValue.arrayRemove(userIds.toList())
                           });
-                          _getUserList();
+                          getUserList();
+                          showSnackBarUserAdded(userIds, 'removed');
                         },
                         child: const Text('Remove users'),
                       ),
