@@ -17,7 +17,7 @@ import 'package:zeeyou/widgets/zee_button.dart';
 Widget inputLabel(String label, double topMargin) => Container(
     width: double.infinity,
     margin: EdgeInsets.only(top: topMargin),
-    alignment: Alignment.centerLeft,
+    alignment: Alignment.center,
     child: Text(label, style: const TextStyle(color: Colors.black45)));
 
 class AddEventScreen extends StatefulWidget {
@@ -182,15 +182,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 },
                 textCapitalization: TextCapitalization.sentences,
               ),
-              const SizedBox(height: 10),
-              TextFormField(
-                decoration: textInputDecoration("Description (optionnel)"),
-                enableSuggestions: false,
-                onSaved: (value) {
-                  _enteredDescription = value;
-                },
-                textCapitalization: TextCapitalization.sentences,
+              inputLabel('Couleur: ', 10),
+              Slider.adaptive(
+                max: 255,
+                activeColor: _enteredColor,
+                value: _enteredColorHue,
+                onChanged: (newColorHue) => updateColorHue(newColorHue),
               ),
+              Text('Utile (optionnel) :',
+                  style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 5),
               EventDetailsDate(
                 color: _enteredColor,
                 date: _enteredDate,
@@ -211,28 +212,22 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 },
                 creatingEvent: true,
               ),
-              inputLabel(
-                  'Nombre maximum de personnes : ${_enteredMaxPeople.round()}',
-                  10),
-              Slider.adaptive(
-                activeColor: Colors.amber,
-                min: 1.0,
-                max: 101.0,
-                divisions: 100,
-                value: _enteredMaxPeople,
-                onChanged: (value) {
-                  setState(() => _enteredMaxPeople = value);
+              ElevatedButton.icon(
+                  onPressed: _pickIcon,
+                  icon: Icon(_enteredIcon ?? Icons.search),
+                  label: const Text('Choisis une icône')),
+              const SizedBox(height: 20),
+              Text('Futile :', style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 15),
+              TextFormField(
+                decoration: textInputDecoration("Description"),
+                enableSuggestions: false,
+                onSaved: (value) {
+                  _enteredDescription = value;
                 },
-                label: '${_enteredMaxPeople.round()}',
+                textCapitalization: TextCapitalization.sentences,
               ),
-              inputLabel('Couleur: ', 0),
-              Slider.adaptive(
-                max: 255,
-                activeColor: _enteredColor,
-                value: _enteredColorHue,
-                onChanged: (newColorHue) => updateColorHue(newColorHue),
-              ),
-              inputLabel("Type d'événement", 5),
+              inputLabel("Type d'événement", 20),
               DropdownButtonFormField(
                 value: _enteredEventType,
                 items: [
@@ -247,11 +242,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
-                  onPressed: _pickIcon,
-                  icon: Icon(_enteredIcon ?? Icons.search),
-                  label: const Text('Choisis une icône')),
-              const SizedBox(height: 20),
+              inputLabel(
+                  'Nombre maximum de personnes : ${_enteredMaxPeople.round()}',
+                  10),
+              Slider.adaptive(
+                activeColor: Colors.amber,
+                min: 1.0,
+                max: 101.0,
+                divisions: 100,
+                value: _enteredMaxPeople,
+                onChanged: (value) {
+                  setState(() => _enteredMaxPeople = value);
+                },
+                label: '${_enteredMaxPeople.round()}',
+              ),
             ]),
           ),
         ),
