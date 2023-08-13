@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/tools/string_extension.dart';
@@ -34,37 +35,52 @@ class _EventDetailsHeaderState extends State<EventDetailsHeader> {
               onPressed: () {},
             ),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (widget.event.type != null)
                 Text(
-                  widget.event.type.name.capitalize(),
+                  widget.event.type!.name.capitalize(),
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge!
                       .copyWith(color: Colors.black26),
                 ),
-                Text(widget.event.title,
-                    style: Theme.of(context).textTheme.titleLarge),
-                Text(widget.event.description ?? 'ya R à dire'),
-                EventDetailsDate(
-                  color: widget.event.color,
-                  onDatePicked: (date) {},
-                  date: widget.event.date,
-                ),
-                EventDetailsLocation(
-                  color: widget.event.color,
-                  lightColor: widget.event.lightColor,
-                  onLocationPicked: (newLoc) {
-                    setState(() {
-                      widget.event.location = newLoc;
-                    });
-                  },
-                  location: widget.event.location,
-                ),
-              ],
-            ),
+              Text(widget.event.title,
+                  style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 10),
+              Text(widget.event.description ?? ''),
+              const SizedBox(height: 20),
+              EventDetailsDate(
+                color: widget.event.color,
+                onDatePicked: (newDate) {
+                  FirebaseFirestore.instance
+                      .collection('events')
+                      .doc(widget.event.id)
+                      .update({'date': Timestamp.fromDate(newDate)});
+                  setState(() => widget.event.date = newDate);
+                },
+                date: widget.event.date,
+              ),
+              EventDetailsLocation(
+                color: widget.event.color,
+                lightColor: widget.event.lightColor,
+                onLocationPicked: (newLoc) {
+                  FirebaseFirestore.instance
+                      .collection('events')
+                      .doc(widget.event.id)
+                      .update({
+                    'location': {
+                      'lat': newLoc.latitude,
+                      'lng': newLoc.longitude,
+                      'address': newLoc.address,
+                    }
+                  });
+                  setState(() => widget.event.location = newLoc);
+                },
+                location: widget.event.location,
+              ),
+            ],
           ),
         ],
       ),

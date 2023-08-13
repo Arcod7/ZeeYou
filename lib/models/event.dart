@@ -6,7 +6,6 @@ import 'package:zeeyou/tools/hsl_color.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 
 enum EventType {
-  aucun,
   soiree,
   anniversaire,
   mariage,
@@ -21,27 +20,25 @@ class Event {
     this.date,
     this.location,
     this.icon,
+    this.type,
     required this.organizedBy,
-    required this.type,
     required this.color,
     this.isFavorite = false,
     required this.id,
   })  : formatedDate =
             date != null ? DateFormat.yMMMMEEEEd().format(date) : null,
-        typeName = type.name.capitalize(),
         lightColor = changeColorLigntness(color, 0.85);
 
   final String id;
 
   final String title;
   final String? description;
-  final DateTime? date;
+  DateTime? date;
   final String? formatedDate;
   final IconData? icon;
   PlaceLocation? location;
+  final EventType? type;
   final String organizedBy;
-  final EventType type;
-  final String typeName;
   final Color color;
   final Color lightColor;
   final bool isFavorite;

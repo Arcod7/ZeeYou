@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:zeeyou/tools/user_manager.dart';
 
 class UserIcon extends StatefulWidget {
   const UserIcon({super.key});
@@ -19,11 +19,10 @@ class _UserIconState extends State<UserIcon> {
   }
 
   void getUserIcon() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
     final userIconUrl = await FirebaseStorage.instance
         .ref()
         .child('user_images')
-        .child('$uid.jpg')
+        .child('$loggedUserId.jpg')
         .getDownloadURL();
     setState(() {
       url = userIconUrl;

@@ -9,8 +9,7 @@ class MessageBubble extends StatelessWidget {
     required this.messageId,
     required this.message,
     required this.isMe,
-    required this.chatId,
-    required this.chatType,
+    required this.chatCollectionRef,
   }) : isFirstInSequence = true;
 
   const MessageBubble.next({
@@ -18,8 +17,7 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.messageId,
     required this.isMe,
-    required this.chatId,
-    required this.chatType,
+    required this.chatCollectionRef,
   })  : isFirstInSequence = false,
         userImage = null,
         username = null;
@@ -30,8 +28,7 @@ class MessageBubble extends StatelessWidget {
   final String messageId;
   final String message;
   final bool isMe;
-  final String chatId;
-  final String chatType;
+  final CollectionReference<Map<String, dynamic>> chatCollectionRef;
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +51,7 @@ class MessageBubble extends StatelessWidget {
           ),
         GestureDetector(
           onDoubleTap: () {
-            FirebaseFirestore.instance
-                .collection('chats')
-                .doc(chatType)
-                .collection(chatId)
-                .doc(messageId)
-                .delete();
+            chatCollectionRef.doc(messageId).delete();
           },
           child: Container(
             // Add some margin to the edges of the messages, to allow space for the

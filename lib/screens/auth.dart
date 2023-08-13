@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:zeeyou/data/staff.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
 import 'package:zeeyou/widgets/decoration_circle.dart';
 import 'package:zeeyou/widgets/user_image_picker.dart';
@@ -8,11 +9,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/widgets/zee_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final _firebase = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  const AuthScreen({
+    super.key,
+    required this.setCreatingAccount,
+  });
+
+  final void Function(bool value) setCreatingAccount;
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -29,6 +36,7 @@ class _AuthScreenState extends State<AuthScreen> {
   File? _selectedImage;
 
   void _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     final isValid = _form.currentState!.validate();
 
     if (!isValid || !_isLogin && _selectedImage == null) {
@@ -47,6 +55,7 @@ class _AuthScreenState extends State<AuthScreen> {
           password: _enteredPassword,
         );
       } else {
+        widget.setCreatingAccount(true);
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
 
@@ -58,13 +67,24 @@ class _AuthScreenState extends State<AuthScreen> {
         await storageRef.putFile(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
 
-        await FirebaseFirestore.instance
+        final userDocumentRef = FirebaseFirestore.instance
             .collection('users')
-            .doc(userCredentials.user!.uid)
-            .set({
+            .doc(userCredentials.user!.uid);
+
+        await userDocumentRef.set({
           'username': _enteredUserName,
           'email': _enteredEmail,
           'image_url': imageUrl,
+          'created_at': Timestamp.now(),
+        });
+        widget.setCreatingAccount(false);
+        await userDocumentRef.collection('staff_chat').add({
+          'text': staffChatWelcomeMessage,
+          'createdAt': Timestamp.now(),
+          'userId': adminUid,
+          'username': 'Antoine',
+          'userImage':
+              'https://img.freepik.com/vecteurs-libre/illustration-icone-vecteur-dessin-anime-volant-abeille-mignonne-concept-icone-nature-animale-isole-vecteur-premium_138676-6016.jpg?w=2000',
         });
       }
     } on FirebaseAuthException catch (error) {
@@ -72,8 +92,8 @@ class _AuthScreenState extends State<AuthScreen> {
         // ...
       }
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(error.message ?? "T'as pas réussi à te co haha")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message ?? l10n.failedToConnect)));
       setState(() {
         _isAuthenticating = false;
       });
@@ -82,6 +102,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: Stack(
@@ -101,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Text(_isLogin ? 'Se connecter' : 'Créer un compte',
+                  Text(_isLogin ? l10n.connection : l10n.createAccount,
                       style: Theme.of(context).textTheme.displaySmall!),
                   Card(
                     shape: RoundedRectangleBorder(
@@ -132,13 +153,13 @@ class _AuthScreenState extends State<AuthScreen> {
                               if (!_isLogin)
                                 TextFormField(
                                   decoration:
-                                      textInputDecoration("Nom d'utilisateur"),
+                                      textInputDecoration(l10n.username),
                                   enableSuggestions: false,
                                   validator: (value) {
                                     if (value == null ||
                                         value.isEmpty ||
                                         value.trim().length < 4) {
-                                      return '4 lettres minimum stp';
+                                      return l10n.minLetter(4);
                                     }
                                     return null;
                                   },
@@ -147,7 +168,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   },
                                 ),
                               TextFormField(
-                                decoration: textInputDecoration('Adresse Mail'),
+                                decoration: textInputDecoration(l10n.email),
                                 keyboardType: TextInputType.emailAddress,
                                 autocorrect: false,
                                 textCapitalization: TextCapitalization.none,
@@ -155,7 +176,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   if (value == null ||
                                       value.trim().isEmpty ||
                                       !value.contains('@')) {
-                                    return "Merci d'entrer une adresse mail valide";
+                                    return l10n.validEmailPlease;
                                   }
                                   return null;
                                 },
@@ -164,12 +185,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                 },
                               ),
                               TextFormField(
-                                decoration: textInputDecoration('Mot de passe'),
+                                decoration: textInputDecoration(l10n.password),
                                 obscureText: true,
                                 validator: (value) {
                                   if (value == null ||
                                       value.trim().length < 6) {
-                                    return 'Minimum 6 caractères (Conseil : "bonjour" comme ça il y en a 7)';
+                                    return l10n.minLetter(6);
                                   }
                                   return null;
                                 },
@@ -185,8 +206,8 @@ class _AuthScreenState extends State<AuthScreen> {
                               if (!_isAuthenticating)
                                 ZeeButton(
                                     text: _isLogin
-                                        ? "Se connecter"
-                                        : "S'inscrire",
+                                        ? l10n.connection
+                                        : l10n.register,
                                     onPressed: _submit),
                               if (!_isAuthenticating)
                                 TextButton(
@@ -196,8 +217,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                     });
                                   },
                                   child: Text(_isLogin
-                                      ? 'Créer un compte'
-                                      : "J'ai déjà un compte"),
+                                      ? l10n.createAccount
+                                      : l10n.alreadyHaveAccount),
                                 ),
                             ],
                           ),
@@ -211,10 +232,10 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           Positioned(
             bottom: 40,
-            right: 40,
-            child: IconButton(
-                iconSize: 30,
+            left: 40,
+            child: TextButton.icon(
                 icon: const Icon(Icons.send),
+                label: const Text('Admin'),
                 onPressed: () async {
                   setState(() {
                     _isAuthenticating = true;
@@ -228,6 +249,25 @@ class _AuthScreenState extends State<AuthScreen> {
                   });
                 }),
           ),
+          // Positioned(
+          //   bottom: 40,
+          //   right: 40,
+          //   child: TextButton.icon(
+          //       icon: const Icon(Icons.send),
+          //       label: const Text('Malek'),
+          //       onPressed: () async {
+          //         setState(() {
+          //           _isAuthenticating = true;
+          //         });
+          //         await _firebase.signInWithEmailAndPassword(
+          //           email: 'malek@gmail.com',
+          //           password: 'maleklpb',
+          //         );
+          //         setState(() {
+          //           _isAuthenticating = false;
+          //         });
+          //       }),
+          // ),
         ],
       ),
     );

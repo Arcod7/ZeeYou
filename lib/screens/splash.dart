@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CallotChat'),
+        title: const Text('ZeeYou'),
       ),
-      body: const Center(
-        child: Text('Loading...'),
+      body: Center(
+        child: Text(l10n.loading),
       ),
     );
   }

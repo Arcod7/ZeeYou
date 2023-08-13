@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/providers/events_provider.dart';
 import 'package:zeeyou/screens/add_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddEventButton extends ConsumerWidget {
   const AddEventButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () async {
         final Event? newEvent = await Navigator.of(context)
@@ -28,17 +30,17 @@ class AddEventButton extends ConsumerWidget {
             ],
           ),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              'Organiser un nouvel événement',
-              style: TextStyle(
+              l10n.createNewEvent,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
               ),
             ),
-            Icon(Icons.add, color: Colors.white),
+            const Icon(Icons.add, color: Colors.white),
           ],
         ),
       ),

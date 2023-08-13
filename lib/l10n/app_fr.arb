@@ -1,0 +1,74 @@
+{
+  "hello": "Bonjour",
+  "events": "Événements",
+  "addImage": "Ajoute une image",
+  "sendMessage": "Envoie un message...",
+  "connection": "Se connecter",
+  "createAccount": "Créer un compte",
+  "register": "S'inscrire",
+  "alreadyHaveAccount": "J'ai déjà un compte",
+  "username": "Nom d'utilisateur",
+  "email": "Adresse mail",
+  "password": "Mot de passe",
+  "color": "Couleur",
+  "useful": "Utile",
+  "futile": "Futile",
+  "optional": "optionnel",
+  "chooseIcon": "Choisis une icône",
+  "maxNumberPeople": "Nombre maximum de personnes : ",
+  "description": "Description",
+  "eventType": "Type d'énèvement",
+
+  "createYourEvent": "Crée ton évènement !",
+  "createThisEvent": "Créer cet évènement",
+  "nameOfEvent": "Nom de l'énènement",
+
+  "noMessagesForNow": "Pas de messages pour l'instant.",
+  "noEventsForNow": "Pas d'évènements pour l'instant.",
+  "noLocationForNow": "Pas d'endroit prévu pour l'instant.",
+  "noUsersForNow": "Pas d'utilisateurs pour l'instant.",
+  "nobodyFound": "Personne trouvé.",
+  "failedToConnect": "T'as pas réussi à te co haha (et je sais pas pourquoi)",
+  "validEmailPlease": "Merci d'entrer une adresse mail valide.",
+  "minLetter": "{number} lettres minimum",
+  "@minLetter": {
+    "description": "Quand tu veux limiter le nombre de lettres",
+    "placeHolders": {
+      "number": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "errorPlaceHolder": "Ya un prb là frr: ",
+
+  "waitHere": "Halte qui voilà !?",
+  "reallyWantToDelete": "Veux-tu vraiment supprimer cet évènement ?",
+
+  "adminChat": "Le chat du roi",
+  "staffChat": "Chat avec l'équipe",
+  "donate": "Faire un don",
+  "logOut": "Se déconnecter",
+  "language": "Langage",
+  "settings": "Paramètres",
+
+  "organizedBy": " organisé par ",
+  "createNewEvent": "Créer un nouvel évènement",
+  "chooseDate": "Choisis une date",
+  "chooseLocation": "Choisis un lieu",
+  "yourPos": "Ta position géolocalisée",
+
+  "searchFriend": "Cherche un pote !",
+
+  "loading": "Chargement...",
+  "cancel": "Annuler",
+  "deleteForever": "Supprimer définitivement",
+  "messages": "Messages",
+  "addUsersToEvent": "Ajoute tes potes !",
+  "removeUsersToEvent": "Enlève les traitres",
+  "addUsers": "Ajoute des gens",
+  "removeUsers": "Enlève des gens",
+  "added": "ajoutés",
+  "removed": "enlevés"
+
+}

@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/models/place.dart';
-import 'package:zeeyou/tools/sesson_manager.dart';
+import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/home/event_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventListStream extends StatelessWidget {
   const EventListStream({super.key});
@@ -12,12 +13,14 @@ class EventListStream extends StatelessWidget {
         title: event['title'],
         description: event['description'],
         organizedBy: event['organizedByName'],
-        type: EventType.values.firstWhere((e) => e.toString() == event['type']),
+        type: event['type'] != null
+            ? EventType.values.firstWhere((e) => e.toString() == event['type'])
+            : null,
         icon: event['icon'] != null
             ? IconData(
-                event['icon']['codePoint'],
-                fontFamily: event['icon']['fontFamily'],
-                fontPackage: event['icon']['fontPackage'],
+                event['icon']['codePoint']!,
+                fontFamily: event['icon']['fontFamily']!,
+                fontPackage: event['icon']['fontPackage']!,
               )
             : null,
         color: Color.fromARGB(
@@ -41,6 +44,7 @@ class EventListStream extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('events')
@@ -53,14 +57,15 @@ class EventListStream extends StatelessWidget {
           }
 
           if (!eventSnapshots.hasData || eventSnapshots.data!.docs.isEmpty) {
-            return const Center(
-              child: Text("Pas d'events pour l'instant"),
+            return Center(
+              child: Text(l10n.noEventsForNow),
             );
           }
 
           if (eventSnapshots.hasError) {
-            return const Center(
-              child: Text('Ya un prb là frr'),
+            return Center(
+              child:
+                  Text(l10n.errorPlaceHolder + eventSnapshots.error.toString()),
             );
           }
 
@@ -75,7 +80,7 @@ class EventListStream extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
                     margin: const EdgeInsets.only(top: 20),
-                    child: Text('Evenements',
+                    child: Text(l10n.events,
                         style: Theme.of(context).textTheme.headlineSmall),
                   ),
                 );
