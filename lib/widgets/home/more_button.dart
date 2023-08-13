@@ -1,8 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:zeeyou/data/staff.dart';
+import 'package:zeeyou/main.dart';
+import 'package:zeeyou/screens/admin_chat.dart';
 import 'package:zeeyou/screens/chat.dart';
+import 'package:zeeyou/tools/user_manager.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MoreButtonItem<PopupMenuEntry> extends StatelessWidget {
   const MoreButtonItem({
@@ -31,22 +38,30 @@ class MoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     int donateAmount = 5;
 
     return PopupMenuButton(
       itemBuilder: (ctx) => [
-        // TextButton.icon(icon: Icon(Icons.exit_to_app), label: Text('log out')),
-        const PopupMenuItem(
+        if (loggedUserId == adminUid)
+          PopupMenuItem(
+            value: 'admin_chat',
+            child: MoreButtonItem(
+              icon: Icons.chat_outlined,
+              label: l10n.adminChat,
+            ),
+          ),
+        PopupMenuItem(
           value: 'chat',
           child: MoreButtonItem(
             icon: Icons.chat_bubble_outline,
-            label: 'Staff chat',
+            label: l10n.staffChat,
           ),
         ),
         PopupMenuItem(
           child: MoreButtonItem(
             icon: MdiIcons.piggyBankOutline,
-            label: 'Donate',
+            label: l10n.donate,
           ),
           onTap: () async {
             launchUrlString(
@@ -57,29 +72,51 @@ class MoreButton extends StatelessWidget {
           },
         ),
         PopupMenuItem(
-          child: const MoreButtonItem(
+          child: MoreButtonItem(
             icon: Icons.exit_to_app,
-            label: 'Log out',
+            label: l10n.logOut,
           ),
           onTap: () {
             FirebaseAuth.instance.signOut();
           },
         ),
         PopupMenuItem(
-          child: const MoreButtonItem(
-            icon: Icons.settings_outlined,
-            label: 'Settings',
+          child: MoreButtonItem(
+            icon: Icons.language_outlined,
+            label: '${l10n.language} (${l10n.localeName})',
           ),
-          onTap: () {},
+          onTap: () {
+            App.setLocale(
+                context,
+                l10n.localeName == 'fr'
+                    ? const Locale('en')
+                    : const Locale('fr'));
+          },
+        ),
+        PopupMenuItem(
+          child: MoreButtonItem(
+            icon: Icons.settings_outlined,
+            label: l10n.settings,
+          ),
+          onTap: () {
+            debugPrint(loggedUserId);
+          },
         ),
       ],
       onSelected: (value) {
         if (value == 'chat') {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (ctx) => const ChatScreen(
-                chatType: 'staff_chat',
-                chatId: 'staff',
-                title: 'Discute avec nous !'),
+            builder: (ctx) => ChatScreen(
+                chatCollectionRef: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(loggedUserId)
+                    .collection('staff_chat'),
+                title: l10n.staffChat),
+          ));
+        }
+        if (value == 'admin_chat') {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => const AdminChatScreen(),
           ));
         }
       },

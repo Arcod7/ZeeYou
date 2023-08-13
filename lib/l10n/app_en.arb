@@ -1,0 +1,75 @@
+{
+  "hello": "Hello",
+  "events": "Events",
+  "addImage": "Add an Image",
+  "sendMessage": "Send a message...",
+  "connection": "Connection",
+  "createAccount": "Create account",
+  "register": "Register",
+  "alreadyHaveAccount": "I already have an Account",
+  "username": "Username",
+  "email": "Email",
+  "password": "Password",
+  "color": "Color",
+  "useful": "Useful",
+  "futile": "Futile",
+  "optional": "optional",
+  "chooseIcon": "Choose an icon",
+  "maxNumberPeople": "Max number of people : ",
+  "description": "Description",
+  "eventType": "Event type",
+
+  "createYourEvent": "Create your event !",
+  "createThisEvent": "Create this event",
+  "nameOfEvent": "Event's name",
+
+  "noMessagesForNow": "No messages for now.",
+  "noEventsForNow": "No events for now.",
+  "noLocationForNow": "No location for now.",
+  "noUsersForNow": "No users for now.",
+  "nobodyFound": "Nobody found.",
+  "failedToConnect": "You didn't make it and we don't know why",
+  "validEmailPlease": "Please enter valid email.",
+  "minLetter": "At lease {number} characters minimum",
+  "@minLetter": {
+    "description": "When you want to limit the number of letters",
+    "placeHolders": {
+      "number": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+
+  "errorPlaceHolder": "You've got into some trouble: ",
+
+  "waitHere": "Wait !",
+  "reallyWantToDelete": "Do you really want to delete this event ?",
+
+  "adminChat": "King's chat",
+  "staffChat": "Chat with us",
+  "donate": "Donate",
+  "logOut": "Log out",
+  "language": "Language",
+  "settings": "Settings",
+
+  "organizedBy": " organized by ",
+  "createNewEvent": "Create a new event",
+  "chooseDate": "Choose a date",
+  "chooseLocation": "Choose a location",
+  "yourPos": "Your position",
+
+  "searchFriend": "Search a friend !",
+
+  "loading": "Loading...",
+  "cancel": "Annuler",
+  "deleteForever": "Delete forever",
+  "messages": "Messages",
+  "addUsersToEvent": "Add users to your event !",
+  "removeUsersToEvent": "Remove users to your event",
+  "addUsers": "Add users",
+  "removeUsers": "Remove users",
+  "added": "added",
+  "removed": "removed"
+
+}

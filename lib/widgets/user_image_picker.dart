@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class UserImagePicker extends StatefulWidget {
   const UserImagePicker({
     super.key,
@@ -38,6 +40,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         CircleAvatar(
@@ -50,7 +53,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
           onPressed: _pickImage,
           icon: const Icon(Icons.image),
           label: Text(
-            'Ajoute une image',
+            l10n.addImage,
             style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
             ),

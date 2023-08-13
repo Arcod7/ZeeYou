@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zeeyou/widgets/chat_messages.dart';
 import 'package:zeeyou/widgets/new_message.dart';
 import 'package:flutter/material.dart';
@@ -5,14 +6,12 @@ import 'package:flutter/material.dart';
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
     required this.title,
-    required this.chatType,
-    required this.chatId,
+    required this.chatCollectionRef,
     super.key,
   });
 
   final String title;
-  final String chatType;
-  final String chatId;
+  final CollectionReference<Map<String, dynamic>> chatCollectionRef;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -47,13 +46,11 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: ChatMessages(
-              chatId: widget.chatId,
-              chatType: widget.chatType,
+              chatCollectionRef: widget.chatCollectionRef,
             ),
           ),
           NewMessage(
-            chatId: widget.chatId,
-            chatType: widget.chatType,
+            chatCollectionRef: widget.chatCollectionRef,
           ),
         ],
       ),

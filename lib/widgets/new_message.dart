@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewMessage extends StatefulWidget {
   const NewMessage({
-    required this.chatId,
-    required this.chatType,
     super.key,
+    required this.chatCollectionRef,
   });
 
-  final String chatId;
-  final String chatType;
+  final CollectionReference<Map<String, dynamic>> chatCollectionRef;
 
   @override
   State<NewMessage> createState() => _NewMessageState();
@@ -42,11 +41,7 @@ class _NewMessageState extends State<NewMessage> {
     // print(user.uid);
     // print(userData.data());
 
-    FirebaseFirestore.instance
-        .collection('chats')
-        .doc(widget.chatType)
-        .collection(widget.chatId)
-        .add({
+    widget.chatCollectionRef.add({
       'text': enteredMessage,
       'createdAt': Timestamp.now(),
       'userId': user.uid,
@@ -57,6 +52,7 @@ class _NewMessageState extends State<NewMessage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 1, bottom: 14),
       child: Row(
@@ -67,8 +63,7 @@ class _NewMessageState extends State<NewMessage> {
               textCapitalization: TextCapitalization.sentences,
               autocorrect: true,
               enableSuggestions: true,
-              decoration:
-                  const InputDecoration(labelText: 'Envoie un message...'),
+              decoration: InputDecoration(labelText: l10n.sendMessage),
             ),
           ),
           IconButton(

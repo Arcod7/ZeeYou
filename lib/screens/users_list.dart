@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/searchable_listview.dart';
-import 'package:zeeyou/tools/sesson_manager.dart';
+import 'package:zeeyou/tools/user_manager.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserTile extends StatefulWidget {
   const UserTile({
@@ -61,6 +62,7 @@ class UsersListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final Set<String> selectedUserIds = {};
 
     return Scaffold(
@@ -78,8 +80,6 @@ class UsersListScreen extends StatelessWidget {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('users')
-              // .where(FieldPath.documentId, whereIn: widget.filterIn)
-              // .where(FieldPath.documentId, whereNotIn: widget.filterNotIn)
               .orderBy('username')
               .snapshots(),
           builder: (context, userSnapshots) {
@@ -88,15 +88,13 @@ class UsersListScreen extends StatelessWidget {
             }
 
             if (!userSnapshots.hasData || userSnapshots.data!.docs.isEmpty) {
-              return const Center(
-                child: Text("Pas d'utilisateurs pour l'instant"),
+              return Center(
+                child: Text(l10n.noUsersForNow),
               );
             }
 
             if (userSnapshots.hasError) {
-              return const Center(
-                child: Text('Ya un prb là frr'),
-              );
+              return Center(child: Text(l10n.errorPlaceHolder));
             }
 
             final loadedUsers = userSnapshots.data!.docs;
@@ -128,9 +126,9 @@ class UsersListScreen extends StatelessWidget {
                           .contains(value),
                     )
                     .toList(),
-                emptyWidget: const Center(child: Text('Nobody found')),
+                emptyWidget: Center(child: Text(l10n.nobodyFound)),
                 inputDecoration: InputDecoration(
-                  labelText: 'Cherche un pote !',
+                  labelText: l10n.searchFriend,
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
                       width: 1.0,
@@ -140,25 +138,6 @@ class UsersListScreen extends StatelessWidget {
                 ),
               ),
             );
-            // ListView.builder(
-            //   itemCount: loadedUsers.length,
-            //   itemBuilder: (ctx, index) {
-            //     final loadedUser = loadedUsers[index].data();
-            //     final userId = loadedUsers[index].id;
-
-            //     if (userId == loggedUserId ||
-            //         (filterIn != null && !filterIn!.contains(userId)) ||
-            //         (filterNotIn != null && filterNotIn!.contains(userId))) {
-            //       return const SizedBox();
-            //     }
-
-            //     return UserTile(
-            //       loadedUser: loadedUser,
-            //       userId: userId,
-            //       selectedUserIds: selectedUserIds,
-            //     );
-            //   },
-            // );
           }),
     );
   }

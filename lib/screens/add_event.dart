@@ -7,12 +7,13 @@ import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/tools/hsl_color.dart';
-import 'package:zeeyou/tools/sesson_manager.dart';
+import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
 import 'package:zeeyou/widgets/event_details/details_date.dart';
 import 'package:zeeyou/widgets/event_details/details_location.dart';
 import 'package:zeeyou/widgets/zee_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget inputLabel(String label, double topMargin) => Container(
     width: double.infinity,
@@ -27,14 +28,15 @@ class AddEventScreen extends StatefulWidget {
   State<AddEventScreen> createState() => _AddEventScreenState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
+class _AddEventScreenState extends State<AddEventScreen>
+    with SingleTickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
 
   String _enteredTitle = '';
   String? _enteredDescription;
   double _enteredMaxPeople = 2.0;
   double _enteredColorHue = 1.0;
-  EventType _enteredEventType = EventType.aucun;
+  EventType? _enteredEventType;
   DateTime? _enteredDate;
   PlaceLocation? _enteredLocation;
   Color _enteredColor = changeColorLigntness(
@@ -141,23 +143,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   @override
   void initState() {
-    updateColorHue(Random().nextDouble() * 255);
     super.initState();
+    updateColorHue(Random().nextDouble() * 255);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: _enteredColorLight,
-        title: const Text('Crée ton événement !'),
+        title: Text(l10n.createYourEvent),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ZeeButton(
-          text: 'Créer cet événement',
-          onPressed: _submit,
-        ),
+        child: ZeeButton(text: l10n.createThisEvent, onPressed: _submit),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
@@ -167,13 +167,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
             padding: const EdgeInsets.all(12.0),
             child: Column(children: [
               TextFormField(
-                decoration: textInputDecoration("Nom de l'événement"),
+                decoration: textInputDecoration(l10n.nameOfEvent),
                 enableSuggestions: false,
                 validator: (value) {
                   if (value == null ||
                       value.isEmpty ||
                       value.trim().length < 2) {
-                    return '2 lettres minimum stp';
+                    return l10n.minLetter(2);
                   }
                   return null;
                 },
@@ -182,14 +182,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 },
                 textCapitalization: TextCapitalization.sentences,
               ),
-              inputLabel('Couleur: ', 10),
+              inputLabel('${l10n.color}: ', 10),
               Slider.adaptive(
                 max: 255,
                 activeColor: _enteredColor,
                 value: _enteredColorHue,
                 onChanged: (newColorHue) => updateColorHue(newColorHue),
               ),
-              Text('Utile (optionnel) :',
+              Text('${l10n.useful} (${l10n.optional}) :',
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 5),
               EventDetailsDate(
@@ -215,19 +215,20 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ElevatedButton.icon(
                   onPressed: _pickIcon,
                   icon: Icon(_enteredIcon ?? Icons.search),
-                  label: const Text('Choisis une icône')),
+                  label: Text(l10n.chooseIcon)),
               const SizedBox(height: 20),
-              Text('Futile :', style: Theme.of(context).textTheme.titleSmall),
+              Text('${l10n.futile} (${l10n.optional}) :',
+                  style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 15),
               TextFormField(
-                decoration: textInputDecoration("Description"),
+                decoration: textInputDecoration(l10n.description),
                 enableSuggestions: false,
                 onSaved: (value) {
                   _enteredDescription = value;
                 },
                 textCapitalization: TextCapitalization.sentences,
               ),
-              inputLabel("Type d'événement", 20),
+              inputLabel(l10n.eventType, 20),
               DropdownButtonFormField(
                 value: _enteredEventType,
                 items: [
@@ -243,7 +244,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
               const SizedBox(height: 20),
               inputLabel(
-                  'Nombre maximum de personnes : ${_enteredMaxPeople.round()}',
+                  l10n.maxNumberPeople + _enteredMaxPeople.round().toString(),
                   10),
               Slider.adaptive(
                 activeColor: Colors.amber,
@@ -254,7 +255,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 onChanged: (value) {
                   setState(() => _enteredMaxPeople = value);
                 },
-                label: '${_enteredMaxPeople.round()}',
+                label: _enteredMaxPeople.round().toString(),
               ),
             ]),
           ),

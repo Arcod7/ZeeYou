@@ -1,6 +1,7 @@
 import 'package:zeeyou/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({
@@ -25,14 +26,14 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final markerPosition = LatLng(
       widget.location.latitude,
       widget.location.longitude,
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            widget.isSelecting ? 'Choisis mec' : 'Ta position géolocalisée'),
+        title: Text(widget.isSelecting ? l10n.chooseLocation : l10n.yourPos),
         actions: [
           if (widget.isSelecting)
             IconButton(

@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/screens/map.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -94,13 +95,15 @@ class _EventDetailsLocationState extends State<EventDetailsLocation> {
   void _selectOnMap() async {
     final pickedLocation =
         await Navigator.of(context).push<LatLng>(MaterialPageRoute(
-            builder: (ctx) => MapScreen(
-                location: widget.location ??
-                    const PlaceLocation(
-                      latitude: 46.068613,
-                      longitude: 6.568107,
-                      address: '',
-                    ))));
+      builder: (ctx) => MapScreen(
+        location: widget.location ??
+            const PlaceLocation(
+              latitude: 46.068613,
+              longitude: 6.568107,
+              address: '',
+            ),
+      ),
+    ));
 
     if (pickedLocation == null) {
       return;
@@ -110,17 +113,15 @@ class _EventDetailsLocationState extends State<EventDetailsLocation> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.creatingEvent) {
-      _getCurrentLocation();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListTile(
-      onTap: _selectOnMap,
+      onTap: () async {
+        if (widget.creatingEvent) {
+          await _getCurrentLocation();
+        }
+        _selectOnMap();
+      },
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -140,7 +141,7 @@ class _EventDetailsLocationState extends State<EventDetailsLocation> {
                   ? widget.location!.address
                   // widget.event.location != null
                   //     ? widget.event.location!.address
-                  : "Pas d'endroit prévu pour le moment",
+                  : l10n.noLocationForNow,
               style: TextStyle(
                 color: widget.color,
               ),

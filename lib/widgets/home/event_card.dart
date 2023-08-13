@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/event_details.dart';
+import 'package:zeeyou/tools/open_chat_screen.dart';
 import 'package:zeeyou/tools/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavortiteIconButton extends StatefulWidget {
   const FavortiteIconButton({super.key, this.color = Colors.white});
@@ -41,6 +43,29 @@ class _FavortiteIconButtonState extends State<FavortiteIconButton> {
   }
 }
 
+class ChatIconButton extends StatelessWidget {
+  const ChatIconButton({
+    super.key,
+    required this.color,
+    required this.onPressed,
+  });
+
+  final Color color;
+  final void Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.only(right: 12, top: 7, bottom: 10, left: 10),
+        child: Icon(Icons.mark_chat_unread_outlined, size: 25, color: color),
+      ),
+    );
+  }
+}
+
 class EventCard extends StatelessWidget {
   const EventCard({
     super.key,
@@ -74,6 +99,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
@@ -109,8 +135,11 @@ class EventCard extends StatelessWidget {
               : null,
           title:
               Text(event.title, style: Theme.of(context).textTheme.titleMedium),
-          subtitle: Text(
-              '${event.type.name.capitalize()} organisé par ${event.organizedBy}'),
+          subtitle: event.type != null
+              ? Text(event.type!.name.capitalize() +
+                  l10n.organizedBy +
+                  event.organizedBy)
+              : null,
         ),
         if (event.icon != null)
           Positioned(
@@ -125,7 +154,10 @@ class EventCard extends StatelessWidget {
         Positioned(
           top: -2,
           right: -2,
-          child: FavortiteIconButton(color: event.color),
+          child: ChatIconButton(
+            color: event.color,
+            onPressed: () => openChatScreen(context, event),
+          ), //FavortiteIconButton(color: event.color),
         ),
       ]),
     );

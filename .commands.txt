@@ -1,0 +1,7 @@
+
+# Update flutter_launcher_icons
+flutter pub run flutter_launcher_icons
+
+# Build Android apk
+flutter build apk --release --no-tree-shake-icons
+

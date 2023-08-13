@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zeeyou/tools/hsl_color.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventDetailsDate extends StatefulWidget {
   const EventDetailsDate({
@@ -21,10 +22,12 @@ class EventDetailsDate extends StatefulWidget {
 class _EventDetailsDateState extends State<EventDetailsDate> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+      locale: Locale(Localizations.localeOf(context).languageCode),
+    );
     if (picked != null) {
       setState(() {
         widget.onDatePicked(picked);
@@ -34,6 +37,7 @@ class _EventDetailsDateState extends State<EventDetailsDate> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListTile(
       onTap: () => _selectDate(context),
       leading: Container(
@@ -50,8 +54,10 @@ class _EventDetailsDateState extends State<EventDetailsDate> {
       ),
       title: Text(
         widget.date != null
-            ? DateFormat.yMMMMEEEEd().format(widget.date!)
-            : 'Choisis une date ;)',
+            ? DateFormat.yMMMMEEEEd(
+                    Localizations.localeOf(context).languageCode)
+                .format(widget.date!)
+            : l10n.chooseDate,
         style: TextStyle(
           color: widget.color,
         ),
