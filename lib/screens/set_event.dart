@@ -21,14 +21,19 @@ Widget inputLabel(String label, double topMargin) => Container(
     alignment: Alignment.center,
     child: Text(label, style: const TextStyle(color: Colors.black45)));
 
-class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({super.key});
+class SetEventScreen extends StatefulWidget {
+  const SetEventScreen({
+    super.key,
+    this.event,
+  });
+
+  final Event? event;
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<SetEventScreen> createState() => _SetEventScreenState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen>
+class _SetEventScreenState extends State<SetEventScreen>
     with SingleTickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
 
@@ -39,17 +44,17 @@ class _AddEventScreenState extends State<AddEventScreen>
   EventType? _enteredEventType;
   DateTime? _enteredDate;
   PlaceLocation? _enteredLocation;
-  Color _enteredColor = changeColorLigntness(
+  Color _enteredColor = changeColorLightness(
     const Color.fromARGB(255, 255, 199, 135),
     0.3,
   );
-  Color get _enteredColorLight => changeColorLigntness(_enteredColor, 0.85);
+  Color get _enteredColorLight => changeColorLightness(_enteredColor, 0.85);
   IconData? _enteredIcon;
 
   void updateColorHue(double newColorHue) {
     setState(() {
       _enteredColorHue = newColorHue;
-      _enteredColor = changeColorLigntness(
+      _enteredColor = changeColorLightness(
           changeColorHue(
             _enteredColor,
             _enteredColorHue,
@@ -88,8 +93,7 @@ class _AddEventScreenState extends State<AddEventScreen>
 
     final username = await getUsername(loggedUserId);
 
-    // Faudrait d'abbord vérifier que l'id existe pas déjà
-    FirebaseFirestore.instance.collection('events').add({
+    final Map<String, dynamic> jsonEvent = {
       'title': _enteredTitle,
       ..._enteredDescription != null
           ? {'description': _enteredDescription}
@@ -108,7 +112,7 @@ class _AddEventScreenState extends State<AddEventScreen>
               }
             }
           : {},
-      'color': [_enteredColor.red, _enteredColor.green, _enteredColor.blue],
+      'colorHue': _enteredColorHue,
       ..._enteredDate != null
           ? {'date': Timestamp.fromDate(_enteredDate!)}
           : {},
@@ -124,10 +128,22 @@ class _AddEventScreenState extends State<AddEventScreen>
             }
           : {},
       'user_list': [loggedUserId],
-    });
+    };
+
+    if (widget.event != null) {
+      FirebaseFirestore.instance
+          .collection('events')
+          .doc(widget.event!.id)
+          .update(jsonEvent);
+    } else {
+      FirebaseFirestore.instance.collection('events').add(jsonEvent);
+    }
 
     if (context.mounted) {
       Navigator.of(context).pop();
+      if (widget.event != null) {
+        Navigator.pop(context);
+      }
     }
 
     // Navigator.of(context).pop(Event(
@@ -143,10 +159,29 @@ class _AddEventScreenState extends State<AddEventScreen>
     // ));
   }
 
+  void updateFromEvent(Event event) {
+    setState(() {
+      _enteredTitle = event.title;
+      _enteredDescription = event.description;
+      _enteredDate = event.date;
+      _enteredColorHue = event.colorHue;
+      _enteredLocation = event.location;
+      _enteredIcon = event.icon;
+      _enteredMaxPeople =
+          event.maxPeople != null ? event.maxPeople!.roundToDouble() : 2.0;
+      _enteredEventType = event.type;
+    });
+    updateColorHue(_enteredColorHue);
+  }
+
   @override
   void initState() {
     super.initState();
-    updateColorHue(Random().nextDouble() * 255);
+    if (widget.event != null) {
+      updateFromEvent(widget.event!);
+    } else {
+      updateColorHue(Random().nextDouble() * 255);
+    }
   }
 
   @override
@@ -169,6 +204,7 @@ class _AddEventScreenState extends State<AddEventScreen>
             padding: const EdgeInsets.all(12.0),
             child: Column(children: [
               TextFormField(
+                initialValue: widget.event != null ? widget.event!.title : null,
                 decoration: textInputDecoration(l10n.nameOfEvent),
                 enableSuggestions: false,
                 validator: (value) {
@@ -223,6 +259,8 @@ class _AddEventScreenState extends State<AddEventScreen>
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 15),
               TextFormField(
+                initialValue:
+                    widget.event != null ? widget.event!.description : null,
                 decoration: textInputDecoration(l10n.description),
                 enableSuggestions: false,
                 onSaved: (value) {

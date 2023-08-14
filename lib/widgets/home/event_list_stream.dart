@@ -23,12 +23,7 @@ class EventListStream extends StatelessWidget {
                 fontPackage: event['icon']['fontPackage']!,
               )
             : null,
-        color: Color.fromARGB(
-          255,
-          event['color'][0],
-          event['color'][1],
-          event['color'][2],
-        ),
+        colorHue: event['colorHue'],
         date: event['date'] != null
             ? (event['date'] as Timestamp).toDate()
             : null,
