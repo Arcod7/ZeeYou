@@ -52,6 +52,8 @@
   "logOut": "Log out",
   "language": "Language",
   "settings": "Settings",
+  "save": "Save",
+  "gettingLocation": "Getting location...",
 
   "organizedBy": " organized by ",
   "createNewEvent": "Create a new event",

@@ -73,15 +73,6 @@ class MoreButton extends StatelessWidget {
         ),
         PopupMenuItem(
           child: MoreButtonItem(
-            icon: Icons.exit_to_app,
-            label: l10n.logOut,
-          ),
-          onTap: () {
-            FirebaseAuth.instance.signOut();
-          },
-        ),
-        PopupMenuItem(
-          child: MoreButtonItem(
             icon: Icons.language_outlined,
             label: '${l10n.language} (${l10n.localeName})',
           ),
@@ -100,6 +91,15 @@ class MoreButton extends StatelessWidget {
           ),
           onTap: () {
             debugPrint(loggedUserId);
+          },
+        ),
+        PopupMenuItem(
+          child: MoreButtonItem(
+            icon: Icons.exit_to_app,
+            label: l10n.logOut,
+          ),
+          onTap: () {
+            FirebaseAuth.instance.signOut();
           },
         ),
       ],

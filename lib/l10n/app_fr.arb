@@ -51,6 +51,8 @@
   "logOut": "Se déconnecter",
   "language": "Langage",
   "settings": "Paramètres",
+  "save": "Sauvegarder",
+  "gettingLocation": "Récupération de ta position...",
 
   "organizedBy": " organisé par ",
   "createNewEvent": "Créer un nouvel évènement",

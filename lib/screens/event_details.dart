@@ -8,6 +8,7 @@ import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/adaptive_alert_dialog.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/widgets/event_details/function_container.dart';
 
 class EventDetailsScreen extends StatelessWidget {
   const EventDetailsScreen({
@@ -21,12 +22,12 @@ class EventDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     List<String>? userList;
-    Future<void> getUserList() async {
+    Future<List<String>?> getUserList() async {
       final eventData = await FirebaseFirestore.instance
           .collection('events')
           .doc(event.id)
           .get();
-      userList = List.castFrom(eventData.data()!['user_list'] as List);
+      return List.castFrom(eventData.data()!['user_list'] as List);
     }
 
     Future<String> getUserNamesFromSet(Set<String> userIds) async {
@@ -44,9 +45,9 @@ class EventDetailsScreen extends StatelessWidget {
       }
     }
 
-    getUserList();
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: event.lightColor,
         actions: [
           IconButton(
@@ -62,12 +63,18 @@ class EventDetailsScreen extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back),
                       label: Text(l10n.cancel),
                     ),
-                    TextButton.icon(
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.errorContainer,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onErrorContainer),
                       onPressed: () {
                         FirebaseFirestore.instance
                             .collection('events')
                             .doc(event.id)
                             .delete();
+                        Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(Icons.delete_forever_outlined),
@@ -83,11 +90,6 @@ class EventDetailsScreen extends StatelessWidget {
             onPressed: () {},
             icon: const Icon(Icons.edit_outlined),
           ),
-          // PopupMenuButton(
-          //   itemBuilder: (ctx) => [
-          //     PopupMenuItem(child: const Text('Donate ?'), onTap: () {}),
-          //   ],
-          // ),
         ],
       ),
       body: SingleChildScrollView(
@@ -114,55 +116,82 @@ class EventDetailsScreen extends StatelessWidget {
                   icon: Icon(MdiIcons.chat),
                   label: Text(l10n.messages),
                 ),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        final userIds = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => UsersListScreen(
-                              title: l10n.addUsersToEvent,
-                              filterNotIn: userList,
+                        userList = await getUserList();
+                        if (context.mounted) {
+                          final userIds = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (ctx) => UsersListScreen(
+                                title: l10n.addUsersToEvent,
+                                filterNotIn: userList,
+                              ),
                             ),
-                          ),
-                        );
-                        await FirebaseFirestore.instance
-                            .collection('events')
-                            .doc(event.id)
-                            .update({
-                          "user_list": FieldValue.arrayUnion(userIds.toList())
-                        });
-                        getUserList();
-                        showSnackBarUserAdded(userIds, l10n.added);
+                          );
+                          await FirebaseFirestore.instance
+                              .collection('events')
+                              .doc(event.id)
+                              .update({
+                            "user_list": FieldValue.arrayUnion(userIds.toList())
+                          });
+                          showSnackBarUserAdded(userIds, l10n.added);
+                        }
                       },
                       child: Text(l10n.addUsers),
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        final userIds = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) {
-                              return UsersListScreen(
-                                title: l10n.removeUsersToEvent,
-                                filterIn: userList,
-                              );
-                            },
-                          ),
-                        );
-                        await FirebaseFirestore.instance
-                            .collection('events')
-                            .doc(event.id)
-                            .update({
-                          "user_list": FieldValue.arrayRemove(userIds.toList())
-                        });
-                        getUserList();
-                        showSnackBarUserAdded(userIds, l10n.removed);
+                        userList = await getUserList();
+                        if (context.mounted) {
+                          final userIds = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (ctx) {
+                                return UsersListScreen(
+                                  title: l10n.removeUsersToEvent,
+                                  filterIn: userList,
+                                );
+                              },
+                            ),
+                          );
+                          await FirebaseFirestore.instance
+                              .collection('events')
+                              .doc(event.id)
+                              .update({
+                            "user_list":
+                                FieldValue.arrayRemove(userIds.toList())
+                          });
+                          showSnackBarUserAdded(userIds, l10n.removed);
+                        }
                       },
                       child: Text(l10n.removeUsers),
                     ),
                   ],
                 ),
+                FunctionContainer(
+                  color: event.color,
+                  icon: MdiIcons.listBoxOutline,
+                  title: 'Liste',
+                ),
+                FunctionContainer(
+                  color: event.color,
+                  icon: MdiIcons.chartBoxOutline,
+                  title: 'Sondages',
+                ),
+                FunctionContainer(
+                  color: event.color,
+                  icon: Icons.euro_outlined,
+                  title: 'Dépenses',
+                ),
+                FunctionContainer(
+                  color: event.color,
+                  icon: MdiIcons.car,
+                  title: 'Covoiturage',
+                ),
+                const SizedBox(height: 100),
               ],
             ),
           ),

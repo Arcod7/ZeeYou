@@ -75,7 +75,6 @@ class EventListStream extends StatelessWidget {
             itemCount: loadedEvents.length + 1,
             itemBuilder: (ctx, index) {
               if (index == 0) {
-                // return the header
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
