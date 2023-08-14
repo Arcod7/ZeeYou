@@ -5,6 +5,7 @@ class FunctionContainer extends StatelessWidget {
   const FunctionContainer({
     super.key,
     required this.color,
+    required this.veryLightColor,
     required this.icon,
     required this.title,
     this.child,
@@ -12,6 +13,7 @@ class FunctionContainer extends StatelessWidget {
   });
 
   final Color color;
+  final Color veryLightColor;
   final IconData icon;
   final String title;
   final Widget? child;
@@ -19,12 +21,11 @@ class FunctionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lightColor = changeColorLigntness(color, 0.94);
     return Column(
       children: [
         Container(
           margin: const EdgeInsets.only(top: 20),
-          color: disabled ? Colors.grey[200] : lightColor,
+          color: disabled ? Colors.grey[200] : veryLightColor,
           width: double.infinity,
           height: 70,
           child: Row(

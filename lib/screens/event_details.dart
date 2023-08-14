@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/models/event.dart';
+import 'package:zeeyou/screens/set_event.dart';
 import 'package:zeeyou/screens/users_list.dart';
 import 'package:zeeyou/tools/open_chat_screen.dart';
 import 'package:zeeyou/tools/user_manager.dart';
@@ -87,7 +88,11 @@ class EventDetailsScreen extends StatelessWidget {
             icon: const Icon(Icons.delete_outline),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (ctx) => SetEventScreen(event: event),
+              ));
+            },
             icon: const Icon(Icons.edit_outlined),
           ),
         ],
@@ -173,21 +178,25 @@ class EventDetailsScreen extends StatelessWidget {
                 ),
                 FunctionContainer(
                   color: event.color,
+                  veryLightColor: event.veryLightColor,
                   icon: MdiIcons.listBoxOutline,
                   title: 'Liste',
                 ),
                 FunctionContainer(
                   color: event.color,
+                  veryLightColor: event.veryLightColor,
                   icon: MdiIcons.chartBoxOutline,
                   title: 'Sondages',
                 ),
                 FunctionContainer(
                   color: event.color,
+                  veryLightColor: event.veryLightColor,
                   icon: Icons.euro_outlined,
                   title: 'Dépenses',
                 ),
                 FunctionContainer(
                   color: event.color,
+                  veryLightColor: event.veryLightColor,
                   icon: MdiIcons.car,
                   title: 'Covoiturage',
                 ),

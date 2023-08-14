@@ -5,12 +5,12 @@ Color increaseColorSaturation(Color color, double value) =>
         .withSaturation(HSLColor.fromColor(color).saturation + value)
         .toColor();
 
-Color increaseColorLigntness(Color color, double value) =>
+Color increaseColorLightness(Color color, double value) =>
     HSLColor.fromColor(color)
         .withLightness(HSLColor.fromColor(color).lightness + value)
         .toColor();
 
-Color changeColorLigntness(Color color, double value) =>
+Color changeColorLightness(Color color, double value) =>
     HSLColor.fromColor(color).withLightness(value).toColor();
 
 Color changeColorHue(Color color, double hue) =>

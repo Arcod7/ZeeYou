@@ -44,7 +44,7 @@ class _EventDetailsDateState extends State<EventDetailsDate> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: changeColorLigntness(widget.color, 0.85),
+          color: changeColorLightness(widget.color, 0.85),
           borderRadius: BorderRadius.circular(100),
         ),
         child: Icon(
