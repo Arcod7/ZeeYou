@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 
 import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/tools/hsl_color.dart';
-import 'package:zeeyou/tools/string_extension.dart';
 
 enum EventType {
   soiree,

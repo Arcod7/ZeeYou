@@ -96,7 +96,9 @@ class _AddEventScreenState extends State<AddEventScreen>
           : {},
       'organizedBy': loggedUserId,
       'organizedByName': username,
-      'type': _enteredEventType.toString(),
+      ..._enteredEventType != null
+          ? {'type': _enteredEventType!.toString()}
+          : {},
       ..._enteredIcon != null
           ? {
               'icon': {
@@ -257,6 +259,7 @@ class _AddEventScreenState extends State<AddEventScreen>
                 },
                 label: _enteredMaxPeople.round().toString(),
               ),
+              const SizedBox(height: 200),
             ]),
           ),
         ),

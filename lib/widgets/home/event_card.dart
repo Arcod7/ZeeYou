@@ -135,11 +135,10 @@ class EventCard extends StatelessWidget {
               : null,
           title:
               Text(event.title, style: Theme.of(context).textTheme.titleMedium),
-          subtitle: event.type != null
-              ? Text(event.type!.name.capitalize() +
+          subtitle: Text(
+              (event.type != null ? event.type!.name.capitalize() : '') +
                   l10n.organizedBy +
-                  event.organizedBy)
-              : null,
+                  event.organizedBy),
         ),
         if (event.icon != null)
           Positioned(
@@ -147,7 +146,7 @@ class EventCard extends StatelessWidget {
             right: 10,
             child: Icon(
               event.icon,
-              size: 22,
+              size: 25,
               color: event.color,
             ),
           ),

@@ -29,8 +29,9 @@ class _EventDetailsHeaderState extends State<EventDetailsHeader> {
             right: 0,
             child: IconButton(
               icon: Icon(
-                Icons.favorite,
+                widget.event.icon,
                 color: widget.event.color,
+                size: 35,
               ),
               onPressed: () {},
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zeeyou/tools/hsl_color.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/tools/string_extension.dart';
 
 class EventDetailsDate extends StatefulWidget {
   const EventDetailsDate({
@@ -57,6 +58,7 @@ class _EventDetailsDateState extends State<EventDetailsDate> {
             ? DateFormat.yMMMMEEEEd(
                     Localizations.localeOf(context).languageCode)
                 .format(widget.date!)
+                .capitalize()
             : l10n.chooseDate,
         style: TextStyle(
           color: widget.color,
