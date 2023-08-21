@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:zeeyou/models/event.dart';
-import 'package:zeeyou/models/place.dart';
-import 'package:zeeyou/tools/hsl_color.dart';
+import 'package:zeeyou/screens/event_details.dart';
+import 'package:zeeyou/tools/color_shade.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
@@ -37,31 +37,13 @@ class _SetEventScreenState extends State<SetEventScreen>
     with SingleTickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
 
-  String _enteredTitle = '';
-  String? _enteredDescription;
-  double _enteredMaxPeople = 2.0;
-  double _enteredColorHue = 1.0;
-  EventType? _enteredEventType;
-  DateTime? _enteredDate;
-  PlaceLocation? _enteredLocation;
-  Color _enteredColor = changeColorLightness(
-    const Color.fromARGB(255, 255, 199, 135),
-    0.3,
+  bool _isModifying = false;
+  Event _newEvent = Event(
+    title: 'e',
+    organizedBy: loggedUserId,
+    colors: getColorShade(30),
+    id: '0',
   );
-  Color get _enteredColorLight => changeColorLightness(_enteredColor, 0.85);
-  IconData? _enteredIcon;
-
-  void updateColorHue(double newColorHue) {
-    setState(() {
-      _enteredColorHue = newColorHue;
-      _enteredColor = changeColorLightness(
-          changeColorHue(
-            _enteredColor,
-            _enteredColorHue,
-          ),
-          0.3);
-    });
-  }
 
   void _pickIcon() async {
     IconData? icon = await FlutterIconPicker.showIconPicker(
@@ -78,7 +60,7 @@ class _SetEventScreenState extends State<SetEventScreen>
     );
 
     if (icon != null) {
-      setState(() => _enteredIcon = icon);
+      setState(() => _newEvent.icon = icon);
     }
   }
 
@@ -94,43 +76,41 @@ class _SetEventScreenState extends State<SetEventScreen>
     final username = await getUsername(loggedUserId);
 
     final Map<String, dynamic> jsonEvent = {
-      'title': _enteredTitle,
-      ..._enteredDescription != null
-          ? {'description': _enteredDescription}
+      'title': _newEvent.title,
+      ..._newEvent.description != null
+          ? {'description': _newEvent.description}
           : {},
       'organizedBy': loggedUserId,
       'organizedByName': username,
-      ..._enteredEventType != null
-          ? {'type': _enteredEventType!.toString()}
-          : {},
-      ..._enteredIcon != null
+      ..._newEvent.type != null ? {'type': _newEvent.type!.toString()} : {},
+      ..._newEvent.icon != null
           ? {
               'icon': {
-                'codePoint': _enteredIcon!.codePoint,
-                'fontFamily': _enteredIcon!.fontFamily,
-                'fontPackage': _enteredIcon!.fontPackage,
+                'codePoint': _newEvent.icon!.codePoint,
+                'fontFamily': _newEvent.icon!.fontFamily,
+                'fontPackage': _newEvent.icon!.fontPackage,
               }
             }
           : {},
-      'colorHue': _enteredColorHue,
-      ..._enteredDate != null
-          ? {'date': Timestamp.fromDate(_enteredDate!)}
+      'colorHue': _newEvent.colors.colorHue,
+      ..._newEvent.date != null
+          ? {'date': Timestamp.fromDate(_newEvent.date!)}
           : {},
       'createdAt': Timestamp.now(),
       'updatedAt': Timestamp.now(),
-      ..._enteredLocation != null
+      ..._newEvent.location != null
           ? {
               'location': {
-                'lat': _enteredLocation!.latitude,
-                'lng': _enteredLocation!.longitude,
-                'address': _enteredLocation!.address,
+                'lat': _newEvent.location!.latitude,
+                'lng': _newEvent.location!.longitude,
+                'address': _newEvent.location!.address,
               }
             }
           : {},
       'user_list': [loggedUserId],
     };
 
-    if (widget.event != null) {
+    if (_isModifying) {
       FirebaseFirestore.instance
           .collection('events')
           .doc(widget.event!.id)
@@ -141,46 +121,25 @@ class _SetEventScreenState extends State<SetEventScreen>
 
     if (context.mounted) {
       Navigator.of(context).pop();
-      if (widget.event != null) {
+      if (_isModifying) {
         Navigator.pop(context);
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => EventDetailsScreen(
+                  event: _newEvent,
+                )));
       }
     }
-
-    // Navigator.of(context).pop(Event(
-    //   title: _enteredTitle,
-    //   description: _enteredDescription,
-    //   organizedBy: myUserName,
-    //   type: _enteredEventType,
-    //   icon: _enteredIcon,
-    //   color: _enteredColor,
-    //   date: _enteredDate,
-    //   location: _enteredLocation,
-    //   id: const Uuid().v4(),
-    // ));
-  }
-
-  void updateFromEvent(Event event) {
-    setState(() {
-      _enteredTitle = event.title;
-      _enteredDescription = event.description;
-      _enteredDate = event.date;
-      _enteredColorHue = event.colorHue;
-      _enteredLocation = event.location;
-      _enteredIcon = event.icon;
-      _enteredMaxPeople =
-          event.maxPeople != null ? event.maxPeople!.roundToDouble() : 2.0;
-      _enteredEventType = event.type;
-    });
-    updateColorHue(_enteredColorHue);
   }
 
   @override
   void initState() {
     super.initState();
-    if (widget.event != null) {
-      updateFromEvent(widget.event!);
+    _isModifying = widget.event != null;
+    if (_isModifying) {
+      _newEvent = widget.event!;
     } else {
-      updateColorHue(Random().nextDouble() * 255);
+      setState(
+          () => _newEvent.colors = getColorShade(Random().nextDouble() * 255));
     }
   }
 
@@ -189,12 +148,14 @@ class _SetEventScreenState extends State<SetEventScreen>
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: _enteredColorLight,
-        title: Text(l10n.createYourEvent),
+        backgroundColor: _newEvent.colors.light,
+        title: Text(_isModifying ? l10n.modifyYourEvent : l10n.createYourEvent),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ZeeButton(text: l10n.createThisEvent, onPressed: _submit),
+        child: ZeeButton(
+            text: _isModifying ? l10n.modify : l10n.createThisEvent,
+            onPressed: _submit),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
@@ -204,7 +165,7 @@ class _SetEventScreenState extends State<SetEventScreen>
             padding: const EdgeInsets.all(12.0),
             child: Column(children: [
               TextFormField(
-                initialValue: widget.event != null ? widget.event!.title : null,
+                initialValue: _isModifying ? widget.event!.title : null,
                 decoration: textInputDecoration(l10n.nameOfEvent),
                 enableSuggestions: false,
                 validator: (value) {
@@ -216,61 +177,61 @@ class _SetEventScreenState extends State<SetEventScreen>
                   return null;
                 },
                 onSaved: (value) {
-                  _enteredTitle = value!;
+                  _newEvent.title = value!;
                 },
                 textCapitalization: TextCapitalization.sentences,
               ),
               inputLabel('${l10n.color}: ', 10),
               Slider.adaptive(
                 max: 255,
-                activeColor: _enteredColor,
-                value: _enteredColorHue,
-                onChanged: (newColorHue) => updateColorHue(newColorHue),
+                activeColor: _newEvent.colors.primary,
+                value: _newEvent.colors.colorHue,
+                onChanged: (newColorHue) => setState(
+                    () => _newEvent.colors = getColorShade(newColorHue)),
               ),
               Text('${l10n.useful} (${l10n.optional}) :',
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 5),
               EventDetailsDate(
-                color: _enteredColor,
-                date: _enteredDate,
+                color: _newEvent.colors.primary,
+                date: _newEvent.date,
                 onDatePicked: (date) {
                   setState(() {
-                    _enteredDate = date;
+                    _newEvent.date = date;
                   });
                 },
               ),
               EventDetailsLocation(
-                color: _enteredColor,
-                lightColor: _enteredColorLight,
-                location: _enteredLocation,
+                color: _newEvent.colors.primary,
+                lightColor: _newEvent.colors.light,
+                location: _newEvent.location,
                 onLocationPicked: (newLoc) {
                   setState(() {
-                    _enteredLocation = newLoc;
+                    _newEvent.location = newLoc;
                   });
                 },
                 creatingEvent: true,
               ),
               ElevatedButton.icon(
                   onPressed: _pickIcon,
-                  icon: Icon(_enteredIcon ?? Icons.search),
+                  icon: Icon(_newEvent.icon ?? Icons.search),
                   label: Text(l10n.chooseIcon)),
               const SizedBox(height: 20),
               Text('${l10n.futile} (${l10n.optional}) :',
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 15),
               TextFormField(
-                initialValue:
-                    widget.event != null ? widget.event!.description : null,
+                initialValue: _isModifying ? widget.event!.description : null,
                 decoration: textInputDecoration(l10n.description),
                 enableSuggestions: false,
                 onSaved: (value) {
-                  _enteredDescription = value;
+                  _newEvent.description = value;
                 },
                 textCapitalization: TextCapitalization.sentences,
               ),
               inputLabel(l10n.eventType, 20),
               DropdownButtonFormField(
-                value: _enteredEventType,
+                value: _newEvent.type,
                 items: [
                   for (final type in EventType.values)
                     DropdownMenuItem(
@@ -279,23 +240,32 @@ class _SetEventScreenState extends State<SetEventScreen>
                     )
                 ],
                 onChanged: (value) {
-                  _enteredEventType = value!;
+                  _newEvent.type = value!;
                 },
               ),
               const SizedBox(height: 20),
               inputLabel(
-                  l10n.maxNumberPeople + _enteredMaxPeople.round().toString(),
+                  l10n.maxNumberPeople +
+                      (_newEvent.maxPeople != null
+                          ? _newEvent.maxPeople!.round().toString()
+                          : 'Infinity'),
                   10),
               Slider.adaptive(
                 activeColor: Colors.amber,
-                min: 1.0,
+                min: 0.0,
                 max: 101.0,
                 divisions: 100,
-                value: _enteredMaxPeople,
+                value: (_newEvent.maxPeople ?? 0).toDouble(),
                 onChanged: (value) {
-                  setState(() => _enteredMaxPeople = value);
+                  if (value <= 0.1) {
+                    _newEvent.maxPeople = null;
+                  } else {
+                    setState(() => _newEvent.maxPeople = value.round());
+                  }
                 },
-                label: _enteredMaxPeople.round().toString(),
+                label: _newEvent.maxPeople != null
+                    ? _newEvent.maxPeople!.round().toString()
+                    : 'Nono josé',
               ),
               const SizedBox(height: 200),
             ]),

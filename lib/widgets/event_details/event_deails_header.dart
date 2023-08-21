@@ -30,7 +30,7 @@ class _EventDetailsHeaderState extends State<EventDetailsHeader> {
             child: IconButton(
               icon: Icon(
                 widget.event.icon,
-                color: widget.event.color,
+                color: widget.event.colors.primary,
                 size: 35,
               ),
               onPressed: () {},
@@ -53,7 +53,7 @@ class _EventDetailsHeaderState extends State<EventDetailsHeader> {
               Text(widget.event.description ?? ''),
               const SizedBox(height: 20),
               EventDetailsDate(
-                color: widget.event.color,
+                color: widget.event.colors.primary,
                 onDatePicked: (newDate) {
                   FirebaseFirestore.instance
                       .collection('events')
@@ -64,8 +64,8 @@ class _EventDetailsHeaderState extends State<EventDetailsHeader> {
                 date: widget.event.date,
               ),
               EventDetailsLocation(
-                color: widget.event.color,
-                lightColor: widget.event.lightColor,
+                color: widget.event.colors.primary,
+                lightColor: widget.event.colors.light,
                 onLocationPicked: (newLoc) {
                   FirebaseFirestore.instance
                       .collection('events')

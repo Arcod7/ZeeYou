@@ -61,7 +61,7 @@ class ChatIconButton extends StatelessWidget {
       child: Container(
         color: Colors.transparent,
         padding: const EdgeInsets.only(right: 12, top: 7, bottom: 10, left: 10),
-        child: Icon(Icons.mark_chat_unread_outlined, size: 25, color: color),
+        child: Icon(Icons.chat_bubble_outline, size: 25, color: color),
       ),
     );
   }
@@ -74,6 +74,11 @@ class EventCard extends StatelessWidget {
   });
 
   final Event event;
+
+  void openEventDetails(BuildContext context) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (ctx) => EventDetailsScreen(event: event)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,29 +94,37 @@ class EventCard extends StatelessWidget {
       alignment: Alignment.center,
       child: Stack(children: [
         ListTile(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (ctx) => EventDetailsScreen(event: event)));
-          },
+          onTap: () => openChatScreen(
+            context,
+            event,
+            onTitlePress: () => openEventDetails(context),
+          ),
           visualDensity: const VisualDensity(vertical: 3),
           leading: event.date != null
-              ? Container(
-                  alignment: Alignment.center,
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: event.lightColor,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    timeago.format(
-                        DateTime.now()
-                            .add(event.date!.difference(DateTime.now())),
-                        locale: Localizations.localeOf(context).languageCode,
-                        allowFromNow: true),
-                    style: const TextStyle(color: Colors.black87),
-                    textAlign: TextAlign.center,
+              ? GestureDetector(
+                  onTap: () => openEventDetails(context),
+                  child: Hero(
+                    tag: event.id,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: event.colors.light,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        timeago.format(
+                            DateTime.now()
+                                .add(event.date!.difference(DateTime.now())),
+                            locale:
+                                Localizations.localeOf(context).languageCode,
+                            allowFromNow: true),
+                        style: const TextStyle(color: Colors.black87),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 )
               : null,
@@ -129,17 +142,17 @@ class EventCard extends StatelessWidget {
             child: Icon(
               event.icon,
               size: 25,
-              color: event.color,
+              color: event.colors.primary,
             ),
           ),
-        Positioned(
-          top: -2,
-          right: -2,
-          child: ChatIconButton(
-            color: event.color,
-            onPressed: () => openChatScreen(context, event),
-          ), //FavortiteIconButton(color: event.color),
-        ),
+        // Positioned(
+        //   top: -2,
+        //   right: -2,
+        //   child: ChatIconButton(
+        //     color: event.colors.primary,
+        //     onPressed: () => openChatScreen(context, event),
+        //   ), //FavortiteIconButton(color: event.colors.primary),
+        // ),
       ]),
     );
   }

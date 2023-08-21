@@ -22,6 +22,8 @@
   "createYourEvent": "Crée ton évènement !",
   "createThisEvent": "Créer cet évènement",
   "nameOfEvent": "Nom de l'énènement",
+  "modifyYourEvent": "Modifie ton évènement",
+  "modify": "Modifier",
 
   "noMessagesForNow": "Pas de messages pour l'instant.",
   "noEventsForNow": "Pas d'évènements pour l'instant.",

@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:zeeyou/data/staff.dart';
 import 'package:zeeyou/main.dart';
 import 'package:zeeyou/screens/admin_chat.dart';
 import 'package:zeeyou/screens/chat.dart';
+import 'package:zeeyou/screens/donate_screen.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -39,7 +39,6 @@ class MoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    int donateAmount = 5;
 
     return PopupMenuButton(
       itemBuilder: (ctx) => [
@@ -59,17 +58,11 @@ class MoreButton extends StatelessWidget {
           ),
         ),
         PopupMenuItem(
+          value: 'donate',
           child: MoreButtonItem(
             icon: MdiIcons.piggyBankOutline,
             label: l10n.donate,
           ),
-          onTap: () async {
-            launchUrlString(
-              'https://paypal.me/antoineesman/$donateAmount',
-              mode: LaunchMode.externalApplication,
-            );
-            donateAmount *= 5;
-          },
         ),
         PopupMenuItem(
           child: MoreButtonItem(
@@ -115,9 +108,12 @@ class MoreButton extends StatelessWidget {
           ));
         }
         if (value == 'admin_chat') {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (ctx) => const AdminChatScreen(),
-          ));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => const AdminChatScreen()));
+        }
+        if (value == 'donate') {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (ctx) => const DonateScreen()));
         }
       },
     );
