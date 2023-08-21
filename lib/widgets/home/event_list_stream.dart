@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/models/place.dart';
+import 'package:zeeyou/tools/color_shade.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/home/event_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -23,7 +24,7 @@ class EventListStream extends StatelessWidget {
                 fontPackage: event['icon']['fontPackage']!,
               )
             : null,
-        colorHue: event['colorHue'],
+        colors: getColorShade(event['colorHue']),
         date: event['date'] != null
             ? (event['date'] as Timestamp).toDate()
             : null,
@@ -83,6 +84,14 @@ class EventListStream extends StatelessWidget {
 
               final loadedEvent =
                   _getEvent(loadedEvents[index].data(), loadedEvents[index].id);
+
+              // get the last message
+              // loadedEvents[index]
+              //     .reference
+              //     .collection('chat')
+              //     .orderBy('createdAt', descending: false)
+              //     .get()
+              //     .then((value) => print(value.docs[0].data()['text']));
 
               return EventCard(event: loadedEvent);
             },

@@ -22,6 +22,8 @@
   "createYourEvent": "Create your event !",
   "createThisEvent": "Create this event",
   "nameOfEvent": "Event's name",
+  "modifyYourEvent": "Modify your event",
+  "modify": "Modify",
 
   "noMessagesForNow": "No messages for now.",
   "noEventsForNow": "No events for now.",

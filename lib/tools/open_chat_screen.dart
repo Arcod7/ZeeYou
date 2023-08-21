@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/chat.dart';
 
-void openChatScreen(final BuildContext context, final Event event) {
+void openChatScreen(final BuildContext context, final Event event,
+    {final void Function()? onTitlePress}) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (ctx) => ChatScreen(
@@ -12,6 +13,8 @@ void openChatScreen(final BuildContext context, final Event event) {
             .doc(event.id)
             .collection('chat'),
         title: event.title,
+        onTitlePress: onTitlePress,
+        color: event.colors,
       ),
     ),
   );

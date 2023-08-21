@@ -49,7 +49,7 @@ class EventDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        backgroundColor: event.lightColor,
+        backgroundColor: event.colors.light,
         actions: [
           IconButton(
             onPressed: () {
@@ -99,7 +99,7 @@ class EventDetailsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: event.lightColor,
+          color: event.colors.light,
           width: double.infinity,
           child: Container(
             width: 20,
@@ -114,8 +114,9 @@ class EventDetailsScreen extends StatelessWidget {
                 ElevatedButton.icon(
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(event.lightColor),
-                    foregroundColor: MaterialStateProperty.all(event.color),
+                        MaterialStateProperty.all(event.colors.light),
+                    foregroundColor:
+                        MaterialStateProperty.all(event.colors.primary),
                   ),
                   onPressed: () => openChatScreen(context, event),
                   icon: Icon(MdiIcons.chat),
@@ -177,28 +178,33 @@ class EventDetailsScreen extends StatelessWidget {
                   ],
                 ),
                 FunctionContainer(
-                  color: event.color,
-                  veryLightColor: event.veryLightColor,
+                  colors: event.colors,
                   icon: MdiIcons.listBoxOutline,
                   title: 'Liste',
                 ),
                 FunctionContainer(
-                  color: event.color,
-                  veryLightColor: event.veryLightColor,
+                  colors: event.colors,
                   icon: MdiIcons.chartBoxOutline,
                   title: 'Sondages',
+                  disabled: true,
                 ),
                 FunctionContainer(
-                  color: event.color,
-                  veryLightColor: event.veryLightColor,
+                  colors: event.colors,
+                  icon: MdiIcons.foodForkDrink,
+                  title: 'Repas',
+                  disabled: true,
+                ),
+                FunctionContainer(
+                  colors: event.colors,
                   icon: Icons.euro_outlined,
                   title: 'Dépenses',
+                  disabled: true,
                 ),
                 FunctionContainer(
-                  color: event.color,
-                  veryLightColor: event.veryLightColor,
+                  colors: event.colors,
                   icon: MdiIcons.car,
                   title: 'Covoiturage',
+                  disabled: true,
                 ),
                 const SizedBox(height: 100),
               ],

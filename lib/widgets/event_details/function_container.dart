@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:zeeyou/tools/hsl_color.dart';
+import 'package:zeeyou/tools/color_shade.dart';
 
 class FunctionContainer extends StatelessWidget {
   const FunctionContainer({
     super.key,
-    required this.color,
-    required this.veryLightColor,
+    required this.colors,
     required this.icon,
     required this.title,
     this.child,
     this.disabled = false,
   });
 
-  final Color color;
-  final Color veryLightColor;
+  final ColorShade colors;
   final IconData icon;
   final String title;
   final Widget? child;
@@ -25,15 +23,19 @@ class FunctionContainer extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(top: 20),
-          color: disabled ? Colors.grey[200] : veryLightColor,
+          color: disabled ? Colors.grey[200] : colors.veryLight,
           width: double.infinity,
           height: 70,
           child: Row(
             children: [
               const SizedBox(width: 25),
-              Icon(icon, color: color, size: 33),
+              Icon(icon,
+                  color: disabled ? Colors.grey[600] : colors.primary,
+                  size: 33),
               const SizedBox(width: 20),
-              Text(title, style: Theme.of(context).textTheme.titleMedium),
+              Text(title,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: disabled ? Colors.grey[600] : colors.primary)),
             ],
           ),
         ),

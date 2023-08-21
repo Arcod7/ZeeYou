@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:zeeyou/tools/theme.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -53,6 +55,7 @@ class _AppState extends State<App> {
     _fetchLocale(const Locale('en')).then((locale) {
       setLocale(locale);
     });
+    FlutterNativeSplash.remove();
   }
 
   Future<Locale> _fetchLocale(Locale defaultLocale) async {
@@ -88,9 +91,9 @@ class _AppState extends State<App> {
                   body: const Center(
                       child: CircularProgressIndicator.adaptive()));
             }
+            // return const ThemeTestScreen();
             return const HomeScreen();
           }
-          // return const ThemeTestScreen();
           return AuthScreen(
               setCreatingAccount: (value) =>
                   setState(() => creatingAccount = value));
