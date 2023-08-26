@@ -1,22 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:zeeyou/tools/color_shade.dart';
+import 'package:zeeyou/models/event.dart';
+import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/widgets/chat_messages.dart';
 import 'package:zeeyou/widgets/new_message.dart';
 import 'package:flutter/material.dart';
 
+void openChatScreen(final BuildContext context, final Event event,
+    {final void Function()? onTitlePress}) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (ctx) => ChatScreen(
+        chatCollectionRef: FirebaseFirestore.instance
+            .collection('events')
+            .doc(event.id)
+            .collection('chat'),
+        title: event.title,
+        onTitlePress: onTitlePress,
+        color: event.colors,
+        heroTag: event.id + event.title,
+      ),
+    ),
+  );
+}
+
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({
-    required this.title,
-    required this.chatCollectionRef,
-    this.color,
-    this.onTitlePress,
-    super.key,
-  });
+  const ChatScreen(
+      {super.key,
+      required this.title,
+      required this.chatCollectionRef,
+      this.color,
+      this.onTitlePress,
+      this.heroTag});
 
   final String title;
   final CollectionReference<Map<String, dynamic>> chatCollectionRef;
   final ColorShade? color;
   final void Function()? onTitlePress;
+  final String? heroTag;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -46,13 +66,16 @@ class _ChatScreenState extends State<ChatScreen> {
     final Color? color = widget.color != null ? widget.color!.primary : null;
     return Scaffold(
       appBar: AppBar(
-        title: TextButton(
-          onPressed: widget.onTitlePress ?? () {},
-          style: TextButton.styleFrom(foregroundColor: color),
-          child: Text(
-            widget.title,
-            style: const TextStyle(
-              fontSize: 20,
+        title: Hero(
+          tag: widget.heroTag ?? 0,
+          child: TextButton(
+            onPressed: widget.onTitlePress ?? () {},
+            style: TextButton.styleFrom(foregroundColor: color),
+            child: Text(
+              widget.title,
+              style: const TextStyle(
+                fontSize: 20,
+              ),
             ),
           ),
         ),

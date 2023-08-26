@@ -56,6 +56,9 @@ dependencies:
   shared_preferences: ^2.2.0
   timeago: ^3.5.0
   flutter_native_splash: ^2.3.2
+  page_transition: ^2.0.9
+  cached_network_image: ^3.2.3
+  ensure_visible_when_focused: ^1.1.1
 
 dev_dependencies:
   flutter_test:

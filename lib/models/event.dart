@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:zeeyou/models/place.dart';
-import 'package:zeeyou/tools/color_shade.dart';
+import 'package:zeeyou/models/color_shade.dart';
 
 enum EventType {
   soiree,
@@ -9,34 +9,36 @@ enum EventType {
   mariage,
   roadtrip,
   cinema,
+  chill,
 }
 
 class Event {
   Event({
     required this.title,
     this.description,
+    this.icon,
     this.date,
     this.location,
-    this.icon,
-    this.type,
-    this.maxPeople,
-    required this.organizedBy,
     required this.colors,
+    this.type,
+    required this.organizedBy,
+    this.maxPeople,
+    required this.links,
     this.isFavorite = false,
     required this.id,
   });
-  // lightColor: changeColorLigntness(color, 0.85);
 
   String id;
 
   String title;
   String? description;
-  DateTime? date;
   IconData? icon;
+  DateTime? date;
   PlaceLocation? location;
-  EventType? type;
-  int? maxPeople;
-  String organizedBy;
   ColorShade colors;
+  EventType? type;
+  String organizedBy;
+  int? maxPeople;
+  Map<String, dynamic> links;
   bool isFavorite;
 }

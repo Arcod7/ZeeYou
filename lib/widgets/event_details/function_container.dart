@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zeeyou/tools/color_shade.dart';
+import 'package:zeeyou/models/color_shade.dart';
 
 class FunctionContainer extends StatelessWidget {
   const FunctionContainer({
@@ -8,14 +8,14 @@ class FunctionContainer extends StatelessWidget {
     required this.icon,
     required this.title,
     this.child,
-    this.disabled = false,
+    this.isDisabled = false,
   });
 
   final ColorShade colors;
   final IconData icon;
   final String title;
   final Widget? child;
-  final bool disabled;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +23,19 @@ class FunctionContainer extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(top: 20),
-          color: disabled ? Colors.grey[200] : colors.veryLight,
+          color: isDisabled ? Colors.grey[200] : colors.veryLight,
           width: double.infinity,
           height: 70,
           child: Row(
             children: [
               const SizedBox(width: 25),
               Icon(icon,
-                  color: disabled ? Colors.grey[600] : colors.primary,
+                  color: isDisabled ? Colors.grey[600] : colors.primary,
                   size: 33),
               const SizedBox(width: 20),
               Text(title,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: disabled ? Colors.grey[600] : colors.primary)),
+                      color: isDisabled ? Colors.grey[600] : colors.primary)),
             ],
           ),
         ),

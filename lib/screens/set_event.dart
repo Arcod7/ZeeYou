@@ -4,15 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/event_details.dart';
-import 'package:zeeyou/tools/color_shade.dart';
+import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
-import 'package:zeeyou/widgets/event_details/details_date.dart';
-import 'package:zeeyou/widgets/event_details/details_location.dart';
-import 'package:zeeyou/widgets/zee_button.dart';
+import 'package:zeeyou/widgets/event_details/external_link.dart';
+import 'package:zeeyou/widgets/event_details/link_date.dart';
+import 'package:zeeyou/widgets/event_details/link_location.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget inputLabel(String label, double topMargin) => Container(
@@ -35,16 +36,6 @@ class SetEventScreen extends StatefulWidget {
 
 class _SetEventScreenState extends State<SetEventScreen>
     with SingleTickerProviderStateMixin {
-  final _form = GlobalKey<FormState>();
-
-  bool _isModifying = false;
-  Event _newEvent = Event(
-    title: 'e',
-    organizedBy: loggedUserId,
-    colors: getColorShade(30),
-    id: '0',
-  );
-
   void _pickIcon() async {
     IconData? icon = await FlutterIconPicker.showIconPicker(
       context,
@@ -108,6 +99,7 @@ class _SetEventScreenState extends State<SetEventScreen>
             }
           : {},
       'user_list': [loggedUserId],
+      'links': _newEvent.links,
     };
 
     if (_isModifying) {
@@ -138,10 +130,37 @@ class _SetEventScreenState extends State<SetEventScreen>
     if (_isModifying) {
       _newEvent = widget.event!;
     } else {
-      setState(
-          () => _newEvent.colors = getColorShade(Random().nextDouble() * 255));
+      setState(() {
+        _newEvent.colors = getColorShade(Random().nextDouble() * 255);
+      });
     }
+    _scrollController.addListener(() {
+      if (_scrollController.offset > 50) {
+        setState(() => _isActionButtonExtended = false);
+      } else {
+        setState(() => _isActionButtonExtended = true);
+      }
+    });
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  final _form = GlobalKey<FormState>();
+
+  bool _isModifying = false;
+  Event _newEvent = Event(
+    title: 'Event !',
+    organizedBy: loggedUserId,
+    colors: getColorShade(30),
+    links: {'Photos': '', 'Music': '', 'Meet': ''},
+    id: '0',
+  );
+  final ScrollController _scrollController = ScrollController();
+  bool _isActionButtonExtended = true;
 
   @override
   Widget build(BuildContext context) {
@@ -151,14 +170,21 @@ class _SetEventScreenState extends State<SetEventScreen>
         backgroundColor: _newEvent.colors.light,
         title: Text(_isModifying ? l10n.modifyYourEvent : l10n.createYourEvent),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ZeeButton(
-            text: _isModifying ? l10n.modify : l10n.createThisEvent,
-            onPressed: _submit),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _submit,
+        icon: const Icon(Icons.edit),
+        label: Text(_isModifying ? l10n.modify : l10n.createThisEvent),
+        isExtended: _isActionButtonExtended,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // Padding(
+      //   padding: const EdgeInsets.symmetric(horizontal: 20),
+      //   child: ZeeButton(
+      //       text: _isModifying ? l10n.modify : l10n.createThisEvent,
+      //       onPressed: _submit),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Form(
           key: _form,
           child: Padding(
@@ -192,8 +218,8 @@ class _SetEventScreenState extends State<SetEventScreen>
               Text('${l10n.useful} (${l10n.optional}) :',
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 5),
-              EventDetailsDate(
-                color: _newEvent.colors.primary,
+              LinkDate(
+                colors: _newEvent.colors,
                 date: _newEvent.date,
                 onDatePicked: (date) {
                   setState(() {
@@ -201,9 +227,8 @@ class _SetEventScreenState extends State<SetEventScreen>
                   });
                 },
               ),
-              EventDetailsLocation(
-                color: _newEvent.colors.primary,
-                lightColor: _newEvent.colors.light,
+              LinkLocation(
+                colors: _newEvent.colors,
                 location: _newEvent.location,
                 onLocationPicked: (newLoc) {
                   setState(() {
@@ -248,7 +273,7 @@ class _SetEventScreenState extends State<SetEventScreen>
                   l10n.maxNumberPeople +
                       (_newEvent.maxPeople != null
                           ? _newEvent.maxPeople!.round().toString()
-                          : 'Infinity'),
+                          : l10n.infinity),
                   10),
               Slider.adaptive(
                 activeColor: Colors.amber,
@@ -266,6 +291,52 @@ class _SetEventScreenState extends State<SetEventScreen>
                 label: _newEvent.maxPeople != null
                     ? _newEvent.maxPeople!.round().toString()
                     : 'Nono josé',
+              ),
+              const SizedBox(height: 20),
+              ExternalLink(
+                icon: Icons.photo_outlined,
+                colors: _newEvent.colors,
+                title: TextFormField(
+                  initialValue:
+                      _isModifying ? widget.event!.links['Photos'] : null,
+                  decoration: externalLinkInputDecoration(
+                      l10n.photos, _newEvent.colors),
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  onSaved: (value) {
+                    _newEvent.links['Photos'] = value ?? '';
+                  },
+                ),
+              ),
+              ExternalLink(
+                icon: MdiIcons.music,
+                colors: _newEvent.colors,
+                title: TextFormField(
+                  initialValue:
+                      _isModifying ? widget.event!.links['Music'] : null,
+                  decoration:
+                      externalLinkInputDecoration(l10n.music, _newEvent.colors),
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  onSaved: (value) {
+                    _newEvent.links['Music'] = value ?? '';
+                  },
+                ),
+              ),
+              ExternalLink(
+                icon: Icons.meeting_room_outlined,
+                colors: _newEvent.colors,
+                title: TextFormField(
+                  initialValue:
+                      _isModifying ? widget.event!.links['Meet'] : null,
+                  decoration:
+                      externalLinkInputDecoration(l10n.meet, _newEvent.colors),
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  onSaved: (value) {
+                    _newEvent.links['Meet'] = value ?? '';
+                  },
+                ),
               ),
               const SizedBox(height: 200),
             ]),

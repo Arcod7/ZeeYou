@@ -73,6 +73,9 @@
   "addUsers": "Ajoute des gens",
   "removeUsers": "Enlève des gens",
   "added": "ajoutés",
-  "removed": "enlevés"
-
+  "removed": "enlevés",
+  "infinity": "Infini",
+  "music": "Musique",
+  "photos": "Photos",
+  "meet": "Réunion"
 }

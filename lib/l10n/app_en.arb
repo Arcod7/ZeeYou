@@ -74,5 +74,9 @@
   "addUsers": "Add users",
   "removeUsers": "Remove users",
   "added": "added",
-  "removed": "removed"
+  "removed": "removed",
+  "infinity": "Infinity",
+  "music": "Music",
+  "photos": "Photos",
+  "meet": "Meet"
 }
