@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
+import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/screens/event_details.dart';
-import 'package:zeeyou/tools/open_chat_screen.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -77,7 +77,13 @@ class EventCard extends StatelessWidget {
 
   void openEventDetails(BuildContext context) {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (ctx) => EventDetailsScreen(event: event)));
+        MaterialPageRoute(builder: (ctx) => EventDetailsScreen(event: event))
+        // PageTransition(
+        //   ctx: context,
+        //   type: PageTransitionType.bottomToTop,
+        //   child: EventDetailsScreen(event: event),
+        // ),
+        );
   }
 
   @override
@@ -103,37 +109,38 @@ class EventCard extends StatelessWidget {
           leading: event.date != null
               ? GestureDetector(
                   onTap: () => openEventDetails(context),
-                  child: Hero(
-                    tag: event.id,
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: event.colors.light,
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        timeago.format(
-                            DateTime.now()
-                                .add(event.date!.difference(DateTime.now())),
-                            locale:
-                                Localizations.localeOf(context).languageCode,
-                            allowFromNow: true),
-                        style: const TextStyle(color: Colors.black87),
-                        textAlign: TextAlign.center,
-                      ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: event.colors.light,
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      timeago.format(
+                          DateTime.now()
+                              .add(event.date!.difference(DateTime.now())),
+                          locale: Localizations.localeOf(context).languageCode,
+                          allowFromNow: true),
+                      style: const TextStyle(color: Colors.black87),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 )
               : null,
-          title:
-              Text(event.title, style: Theme.of(context).textTheme.titleMedium),
+          title: Hero(
+              tag: event.id + event.title,
+              child: Text(event.title,
+                  style: Theme.of(context).textTheme.titleMedium)),
           subtitle: Text(
-              (event.type != null ? event.type!.name.capitalize() : '') +
-                  l10n.organizedBy +
-                  event.organizedBy),
+            (event.type != null ? event.type!.name.capitalize() : '') +
+                l10n.organizedBy +
+                event.organizedBy,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         if (event.icon != null)
           Positioned(

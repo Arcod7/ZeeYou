@@ -4,35 +4,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/providers/current_location_provider.dart';
 import 'package:zeeyou/screens/map.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:zeeyou/widgets/event_details/external_link.dart';
 
-class EventDetailsLocation extends ConsumerStatefulWidget {
-  const EventDetailsLocation({
+class LinkLocation extends ConsumerStatefulWidget {
+  const LinkLocation({
     super.key,
-    required this.color,
-    required this.lightColor,
+    required this.colors,
     required this.onLocationPicked,
     required this.location,
     this.creatingEvent = false,
   });
 
-  final Color color;
-  final Color lightColor;
+  final ColorShade colors;
   final void Function(PlaceLocation) onLocationPicked;
   final PlaceLocation? location;
   final bool creatingEvent;
 
   @override
-  ConsumerState<EventDetailsLocation> createState() =>
-      _EventDetailsLocationState();
+  ConsumerState<LinkLocation> createState() => _LinkLocationState();
 }
 
-class _EventDetailsLocationState extends ConsumerState<EventDetailsLocation> {
+class _LinkLocationState extends ConsumerState<LinkLocation> {
   var _isGettingLocation = false;
 
   Future<PlaceLocation> _savePlace(double lat, double lng) async {
@@ -122,7 +121,14 @@ class _EventDetailsLocationState extends ConsumerState<EventDetailsLocation> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return ListTile(
+    return ExternalLink(
+      text: _isGettingLocation
+          ? l10n.gettingLocation
+          : widget.location != null
+              ? widget.location!.address
+              : l10n.noLocationForNow,
+      icon: Icons.location_on_outlined,
+      colors: widget.colors,
       onTap: () async {
         PlaceLocation? actualLocation;
         final currentLocation = ref.watch(currentLocationProvider);
@@ -135,32 +141,8 @@ class _EventDetailsLocationState extends ConsumerState<EventDetailsLocation> {
         }
         _selectOnMap(actualLocation ?? currentLocation);
       },
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: widget.lightColor,
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Icon(
-          Icons.location_on_outlined,
-          color: widget.color,
-          size: 23,
-        ),
-      ),
-      title: Text(
-        _isGettingLocation ? l10n.gettingLocation :
-        widget.location != null
-            ? widget.location!.address
-            // widget.event.location != null
-            //     ? widget.event.location!.address
-            : l10n.noLocationForNow,
-        style: TextStyle(
-          color: widget.color,
-        ),
-      ),
-      trailing: _isGettingLocation
-          ? const CircularProgressIndicator.adaptive()
-          : null,
+      isGetting: _isGettingLocation,
+      isNone: widget.location == null,
     );
   }
 }

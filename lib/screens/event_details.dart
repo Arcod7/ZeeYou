@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/models/event.dart';
+import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/screens/set_event.dart';
 import 'package:zeeyou/screens/users_list.dart';
-import 'package:zeeyou/tools/open_chat_screen.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/adaptive_alert_dialog.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/widgets/event_details/external_links.dart';
 import 'package:zeeyou/widgets/event_details/function_container.dart';
 
 class EventDetailsScreen extends StatelessWidget {
@@ -111,6 +112,7 @@ class EventDetailsScreen extends StatelessWidget {
             child: Column(
               children: [
                 EventDetailsHeader(event: event),
+                ExternalLinks(event: event),
                 ElevatedButton.icon(
                   style: ButtonStyle(
                     backgroundColor:
@@ -186,25 +188,25 @@ class EventDetailsScreen extends StatelessWidget {
                   colors: event.colors,
                   icon: MdiIcons.chartBoxOutline,
                   title: 'Sondages',
-                  disabled: true,
+                  isDisabled: true,
                 ),
                 FunctionContainer(
                   colors: event.colors,
                   icon: MdiIcons.foodForkDrink,
                   title: 'Repas',
-                  disabled: true,
+                  isDisabled: true,
                 ),
                 FunctionContainer(
                   colors: event.colors,
                   icon: Icons.euro_outlined,
                   title: 'Dépenses',
-                  disabled: true,
+                  isDisabled: true,
                 ),
                 FunctionContainer(
                   colors: event.colors,
                   icon: MdiIcons.car,
                   title: 'Covoiturage',
-                  disabled: true,
+                  isDisabled: true,
                 ),
                 const SizedBox(height: 100),
               ],

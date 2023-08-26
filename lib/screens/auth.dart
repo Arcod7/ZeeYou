@@ -249,25 +249,25 @@ class _AuthScreenState extends State<AuthScreen> {
                   });
                 }),
           ),
-          // Positioned(
-          //   bottom: 40,
-          //   right: 40,
-          //   child: TextButton.icon(
-          //       icon: const Icon(Icons.send),
-          //       label: const Text('Malek'),
-          //       onPressed: () async {
-          //         setState(() {
-          //           _isAuthenticating = true;
-          //         });
-          //         await _firebase.signInWithEmailAndPassword(
-          //           email: 'malek@gmail.com',
-          //           password: 'maleklpb',
-          //         );
-          //         setState(() {
-          //           _isAuthenticating = false;
-          //         });
-          //       }),
-          // ),
+          Positioned(
+            bottom: 40,
+            right: 40,
+            child: TextButton.icon(
+                icon: const Icon(Icons.send),
+                label: const Text('Malek'),
+                onPressed: () async {
+                  setState(() {
+                    _isAuthenticating = true;
+                  });
+                  await _firebase.signInWithEmailAndPassword(
+                    email: 'malek@gmail.com',
+                    password: 'maleklpb',
+                  );
+                  setState(() {
+                    _isAuthenticating = false;
+                  });
+                }),
+          ),
         ],
       ),
     );

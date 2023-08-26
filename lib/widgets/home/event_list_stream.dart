@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/models/place.dart';
-import 'package:zeeyou/tools/color_shade.dart';
+import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/home/event_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -35,6 +35,7 @@ class EventListStream extends StatelessWidget {
                 address: event['location']['address'],
               )
             : null,
+        links: event['links'] ?? {},
         id: eventId,
       );
 
