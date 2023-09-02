@@ -5,7 +5,6 @@ import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/screens/set_event.dart';
 import 'package:zeeyou/screens/users_list.dart';
-import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/adaptive_alert_dialog.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,9 +32,18 @@ class EventDetailsScreen extends StatelessWidget {
     }
 
     Future<String> getUserNamesFromSet(Set<String> userIds) async {
-      final usernamesList = await Future.wait(
-          userIds.map((userId) async => await getUsername(userId)));
-      return usernamesList.join(', ');
+      final collectionRef = await FirebaseFirestore.instance
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: userIds)
+          .get();
+      return collectionRef.docs
+          .map((user) => user.data()['username'])
+          .toList()
+          .join(', ');
+
+      // final usernamesList = await Future.wait(
+      //     userIds.map((userId) async => await getUsername(userId)));
+      // return usernamesList.join(', ');
     }
 
     void showSnackBarUserAdded(Set<String> userIds, String lastWord) async {

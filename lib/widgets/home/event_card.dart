@@ -106,30 +106,29 @@ class EventCard extends StatelessWidget {
             onTitlePress: () => openEventDetails(context),
           ),
           visualDensity: const VisualDensity(vertical: 3),
-          leading: event.date != null
-              ? GestureDetector(
-                  onTap: () => openEventDetails(context),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: event.colors.light,
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      timeago.format(
+          leading: GestureDetector(
+            onTap: () => openEventDetails(context),
+            child: Container(
+                alignment: Alignment.center,
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: event.colors.light,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  event.date != null
+                      ? timeago.format(
                           DateTime.now()
                               .add(event.date!.difference(DateTime.now())),
                           locale: Localizations.localeOf(context).languageCode,
-                          allowFromNow: true),
-                      style: const TextStyle(color: Colors.black87),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              : null,
+                          allowFromNow: true)
+                      : l10n.chooseDate,
+                  style: const TextStyle(color: Colors.black87),
+                  textAlign: TextAlign.center,
+                )),
+          ),
           title: Hero(
               tag: event.id + event.title,
               child: Text(event.title,
