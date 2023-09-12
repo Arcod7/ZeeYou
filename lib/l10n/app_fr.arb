@@ -14,17 +14,13 @@
   "useful": "Utile",
   "futile": "Futile",
   "optional": "optionnel",
-  "chooseIcon": "Choisis une icône",
-  "maxNumberPeople": "Nombre maximum de personnes : ",
-  "description": "Description",
-  "eventType": "Type d'énèvement",
-
+  
   "createYourEvent": "Crée ton évènement !",
   "createThisEvent": "Créer cet évènement",
   "nameOfEvent": "Nom de l'énènement",
   "modifyYourEvent": "Modifie ton évènement",
   "modify": "Modifier",
-
+  
   "noMessagesForNow": "Pas de messages pour l'instant.",
   "noEventsForNow": "Pas d'évènements pour l'instant.",
   "noLocationForNow": "Pas d'endroit prévu pour l'instant.",
@@ -43,7 +39,7 @@
     }
   },
   "errorPlaceHolder": "Ya un prb là frr: ",
-
+  
   "waitHere": "Halte qui voilà !?",
   "reallyWantToDelete": "Veux-tu vraiment supprimer cet évènement ?",
 
@@ -55,15 +51,20 @@
   "settings": "Paramètres",
   "save": "Sauvegarder",
   "gettingLocation": "Récupération de ta position...",
-
+  
+  "chooseIcon": "Choisis une icône",
+  "greatChoice": "Très bon choix !",
+  "maxNumberPeople": "Nombre maximum de personnes : ",
+  "description": "Description",
+  "eventType": "Type d'énèvement",
   "organizedBy": " organisé par ",
   "createNewEvent": "Créer un nouvel évènement",
   "chooseDate": "Choisis une date",
   "chooseLocation": "Choisis un lieu",
   "yourPos": "Ta position géolocalisée",
-
+  
   "searchFriend": "Cherche un pote !",
-
+  
   "loading": "Chargement...",
   "cancel": "Annuler",
   "deleteForever": "Supprimer définitivement",
@@ -77,5 +78,8 @@
   "infinity": "Infini",
   "music": "Musique",
   "photos": "Photos",
-  "meet": "Réunion"
+  "meet": "Réunion",
+  "putLinkIfYouWant": "Donne l'accès à certains liens utiles si tu le souhaites",
+  "pickAnIcon": "Choisis une icône",
+  "searchInEnglish": "Rechercher (en anglais)"
 }

@@ -14,17 +14,13 @@
   "useful": "Useful",
   "futile": "Futile",
   "optional": "optional",
-  "chooseIcon": "Choose an icon",
-  "maxNumberPeople": "Max number of people : ",
-  "description": "Description",
-  "eventType": "Event type",
-
+  
   "createYourEvent": "Create your event !",
   "createThisEvent": "Create this event",
   "nameOfEvent": "Event's name",
   "modifyYourEvent": "Modify your event",
   "modify": "Modify",
-
+  
   "noMessagesForNow": "No messages for now.",
   "noEventsForNow": "No events for now.",
   "noLocationForNow": "No location for now.",
@@ -42,12 +38,12 @@
       }
     }
   },
-
+  
   "errorPlaceHolder": "You've got into some trouble: ",
-
+  
   "waitHere": "Wait !",
   "reallyWantToDelete": "Do you really want to delete this event ?",
-
+  
   "adminChat": "King's chat",
   "staffChat": "Chat with us",
   "donate": "Donate",
@@ -56,7 +52,12 @@
   "settings": "Settings",
   "save": "Save",
   "gettingLocation": "Getting location...",
-
+  
+  "chooseIcon": "Choose an icon",
+  "greatChoice": "Great choice !",
+  "maxNumberPeople": "Max number of people : ",
+  "description": "Description",
+  "eventType": "Event type",
   "organizedBy": " organized by ",
   "createNewEvent": "Create a new event",
   "chooseDate": "Choose a date",
@@ -78,5 +79,8 @@
   "infinity": "Infinity",
   "music": "Music",
   "photos": "Photos",
-  "meet": "Meet"
+  "meet": "Meet",
+  "putLinkIfYouWant": "Give access to links if you want",
+  "pickAnIcon": "Pick an Icon",
+  "searchInEnglish": "Search"
 }
