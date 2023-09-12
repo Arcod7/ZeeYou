@@ -9,7 +9,6 @@ import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/event_details.dart';
 import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/tools/user_manager.dart';
-import 'package:zeeyou/tools/string_extension.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
 import 'package:zeeyou/widgets/event_details/external_link.dart';
 import 'package:zeeyou/widgets/event_details/link_date.dart';
@@ -36,7 +35,7 @@ class SetEventScreen extends StatefulWidget {
 
 class _SetEventScreenState extends State<SetEventScreen>
     with SingleTickerProviderStateMixin {
-  void _pickIcon() async {
+  void _pickIcon(AppLocalizations l10n) async {
     IconData? icon = await FlutterIconPicker.showIconPicker(
       context,
       customIconPack: iconMap,
@@ -48,6 +47,8 @@ class _SetEventScreenState extends State<SetEventScreen>
       ],
       showTooltips: true,
       adaptiveDialog: true,
+      title: Text(l10n.pickAnIcon),
+      searchHintText: l10n.searchInEnglish,
     );
 
     if (icon != null) {
@@ -56,9 +57,12 @@ class _SetEventScreenState extends State<SetEventScreen>
   }
 
   void _submit() async {
+    setState(() => _isSubmitting = true);
     final isValid = _form.currentState!.validate();
 
     if (!isValid) {
+      setState(() => _isSubmitting = false);
+
       return;
     }
 
@@ -121,6 +125,7 @@ class _SetEventScreenState extends State<SetEventScreen>
                 )));
       }
     }
+    setState(() => _isSubmitting = false);
   }
 
   @override
@@ -153,7 +158,7 @@ class _SetEventScreenState extends State<SetEventScreen>
 
   bool _isModifying = false;
   Event _newEvent = Event(
-    title: 'Event !',
+    title: '',
     organizedBy: loggedUserId,
     colors: getColorShade(30),
     links: {'Photos': '', 'Music': '', 'Meet': ''},
@@ -161,6 +166,7 @@ class _SetEventScreenState extends State<SetEventScreen>
   );
   final ScrollController _scrollController = ScrollController();
   bool _isActionButtonExtended = true;
+  bool _isSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -170,12 +176,18 @@ class _SetEventScreenState extends State<SetEventScreen>
         backgroundColor: _newEvent.colors.light,
         title: Text(_isModifying ? l10n.modifyYourEvent : l10n.createYourEvent),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _submit,
-        icon: const Icon(Icons.edit),
-        label: Text(_isModifying ? l10n.modify : l10n.createThisEvent),
-        isExtended: _isActionButtonExtended,
-      ),
+      floatingActionButton: AnimatedScale(
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.fastOutSlowIn,
+          scale: _newEvent.title != '' ? 1 : 0,
+          child: FloatingActionButton.extended(
+            onPressed: _isSubmitting ? null : _submit,
+            icon: _isSubmitting
+                ? const CircularProgressIndicator.adaptive()
+                : const Icon(Icons.check),
+            label: Text(_isModifying ? l10n.modify : l10n.createThisEvent),
+            isExtended: _isActionButtonExtended,
+          )),
       // Padding(
       //   padding: const EdgeInsets.symmetric(horizontal: 20),
       //   child: ZeeButton(
@@ -202,9 +214,7 @@ class _SetEventScreenState extends State<SetEventScreen>
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  _newEvent.title = value!;
-                },
+                onChanged: (value) => setState(() => _newEvent.title = value),
                 textCapitalization: TextCapitalization.sentences,
               ),
               inputLabel('${l10n.color}: ', 10),
@@ -237,10 +247,15 @@ class _SetEventScreenState extends State<SetEventScreen>
                 },
                 creatingEvent: true,
               ),
-              ElevatedButton.icon(
-                  onPressed: _pickIcon,
-                  icon: Icon(_newEvent.icon ?? Icons.search),
-                  label: Text(l10n.chooseIcon)),
+              ExternalLink(
+                text: _newEvent.icon == null
+                    ? l10n.chooseIcon
+                    : l10n.greatChoice + _newEvent.icon.toString(),
+                icon: _newEvent.icon ?? Icons.search,
+                colors: _newEvent.colors,
+                onTap: () => _pickIcon(l10n),
+                isNone: _newEvent.icon == null,
+              ),
               const SizedBox(height: 20),
               Text('${l10n.futile} (${l10n.optional}) :',
                   style: Theme.of(context).textTheme.titleSmall),
@@ -248,26 +263,27 @@ class _SetEventScreenState extends State<SetEventScreen>
               TextFormField(
                 initialValue: _isModifying ? widget.event!.description : null,
                 decoration: textInputDecoration(l10n.description),
-                enableSuggestions: false,
+                minLines: 1,
+                maxLines: 5,
                 onSaved: (value) {
                   _newEvent.description = value;
                 },
                 textCapitalization: TextCapitalization.sentences,
               ),
-              inputLabel(l10n.eventType, 20),
-              DropdownButtonFormField(
-                value: _newEvent.type,
-                items: [
-                  for (final type in EventType.values)
-                    DropdownMenuItem(
-                      value: type,
-                      child: Text(type.name.capitalize()),
-                    )
-                ],
-                onChanged: (value) {
-                  _newEvent.type = value!;
-                },
-              ),
+              // inputLabel(l10n.eventType, 20),
+              // DropdownButtonFormField(
+              //   value: _newEvent.type,
+              //   items: [
+              //     for (final type in EventType.values)
+              //       DropdownMenuItem(
+              //         value: type,
+              //         child: Text(type.name.capitalize()),
+              //       )
+              //   ],
+              //   onChanged: (value) {
+              //     _newEvent.type = value!;
+              //   },
+              // ),
               const SizedBox(height: 20),
               inputLabel(
                   l10n.maxNumberPeople +
@@ -292,7 +308,8 @@ class _SetEventScreenState extends State<SetEventScreen>
                     ? _newEvent.maxPeople!.round().toString()
                     : 'Nono josé',
               ),
-              const SizedBox(height: 20),
+              inputLabel(l10n.putLinkIfYouWant, 20),
+              const SizedBox(height: 10),
               ExternalLink(
                 icon: Icons.photo_outlined,
                 colors: _newEvent.colors,

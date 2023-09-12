@@ -15,13 +15,14 @@ class EventListStream extends StatelessWidget {
         description: event['description'],
         organizedBy: event['organizedByName'],
         type: event['type'] != null
-            ? EventType.values.firstWhere((e) => e.toString() == event['type'])
+            ? EventType.values.firstWhere((e) => e.toString() == event['type'],
+                orElse: () => EventType.chill)
             : null,
         icon: event['icon'] != null
             ? IconData(
                 event['icon']['codePoint']!,
-                fontFamily: event['icon']['fontFamily']!,
-                fontPackage: event['icon']['fontPackage']!,
+                fontFamily: event['icon']['fontFamily'],
+                fontPackage: event['icon']['fontPackage'],
               )
             : null,
         colors: getColorShade(event['colorHue']),

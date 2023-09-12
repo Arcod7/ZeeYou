@@ -49,7 +49,7 @@ dependencies:
   location: ^5.0.1
   flutter_iconpicker: ^3.2.4
   flutter_riverpod: ^2.3.6
-  searchable_listview: ^2.4.0
+  searchable_listview: '2.5.1'
   url_launcher: ^6.1.12
   flutter_localizations:
     sdk: flutter
