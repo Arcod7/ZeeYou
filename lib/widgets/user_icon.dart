@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zeeyou/tools/user_manager.dart';
@@ -14,13 +14,13 @@ class UserIcon extends StatelessWidget {
     if (urlInStorage != null) {
       return urlInStorage;
     } else {
-      String downloadedUrl = await FirebaseStorage.instance
-          .ref()
-          .child('user_images')
-          .child('$loggedUserId.jpg')
-          .getDownloadURL();
-      prefs.setString('currentUserImageUrl', downloadedUrl);
-      return downloadedUrl;
+      final user = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(loggedUserId)
+          .get();
+      String downloadUrl = user.data()!['image_url'];
+      prefs.setString('currentUserImageUrl', downloadUrl);
+      return downloadUrl;
     }
   }
 

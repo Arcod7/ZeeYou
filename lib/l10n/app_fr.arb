@@ -81,5 +81,7 @@
   "meet": "Réunion",
   "putLinkIfYouWant": "Donne l'accès à certains liens utiles si tu le souhaites",
   "pickAnIcon": "Choisis une icône",
-  "searchInEnglish": "Rechercher (en anglais)"
+  "searchInEnglish": "Rechercher (en anglais)",
+  "pleasePickAnImage": "Merci de choisir une image",
+  "howGoodMemory": "Alors, t'as une bonne mémoire ?"
 }
