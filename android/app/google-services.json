@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "427624094170-hfgdavare82t7bfflq21q8t7be800ijq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.zeeyou",
+            "certificate_hash": "5c14edf161e0c8f60027e59cb24c4c55134e8c9e"
+          }
+        },
+        {
           "client_id": "427624094170-t33tnre7f38vq4o6eq3bp35pnlmkc3ok.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -4,7 +4,7 @@
   "addImage": "Add an Image",
   "sendMessage": "Send a message...",
   "connection": "Connection",
-  "createAccount": "Create account",
+  "createAccount": "Create an account",
   "register": "Register",
   "alreadyHaveAccount": "I already have an Account",
   "username": "Username",
@@ -82,5 +82,7 @@
   "meet": "Meet",
   "putLinkIfYouWant": "Give access to links if you want",
   "pickAnIcon": "Pick an Icon",
-  "searchInEnglish": "Search"
+  "searchInEnglish": "Search",
+  "pleasePickAnImage": "Please pick an image",
+  "howGoodMemory": "How good is your memory ?"
 }

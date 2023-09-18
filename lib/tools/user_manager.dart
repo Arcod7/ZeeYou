@@ -10,6 +10,7 @@ Future<String> getUsername(String userId) async {
   return userData.data()!['username'];
 }
 
+const String defaultUserImageUrl = 'https://img.freepik.com/vecteurs-libre/illustration-icone-vecteur-dessin-anime-volant-abeille-mignonne-concept-icone-nature-animale-isole-vecteur-premium_138676-6016.jpg?w=2000';
 
 // Future<void> deleteUser(String uderId) async {
 //   FirebaseAuth.instance.currentUser!.delete();
