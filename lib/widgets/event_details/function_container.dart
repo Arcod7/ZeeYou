@@ -40,7 +40,7 @@ class FunctionContainer extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        child ?? Text('Nothing in here'),
+        child ?? const Text('Nothing in here'),
       ],
     );
   }

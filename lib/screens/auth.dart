@@ -99,9 +99,12 @@ class _AuthScreenState extends State<AuthScreen> {
       if (error.code == 'email-already-in-use') {
         // ...
       }
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message ?? l10n.failedToConnect)));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.message ?? l10n.failedToConnect)));
+      }
+
       setState(() {
         _isAuthenticating = false;
       });
@@ -255,7 +258,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         TextButton.icon(
                           onPressed: _signInWithGoogle,
                           icon: Icon(MdiIcons.google),
-                          label: Text('Sign in with Google'),
+                          label: const Text('Sign in with Google'),
                         ),
                       ],
                     ),
