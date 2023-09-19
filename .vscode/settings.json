@@ -1,4 +1,5 @@
 {
   "cmake.configureOnOpen": false,
-  "cmake.sourceDirectory": "/home/Arcod/Private/Flutter/zeeyou/windows/runner"
+  "cmake.sourceDirectory": "/home/Arcod/Private/Flutter/zeeyou/windows/runner",
+  "java.configuration.updateBuildConfiguration": "disabled"
 }

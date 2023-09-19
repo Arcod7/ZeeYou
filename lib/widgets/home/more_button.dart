@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zeeyou/data/staff.dart';
-import 'package:zeeyou/main.dart';
 import 'package:zeeyou/screens/admin_chat.dart';
 import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/screens/donate_screen.dart';
+import 'package:zeeyou/tools/change_language.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -70,13 +70,7 @@ class MoreButton extends StatelessWidget {
             icon: Icons.language_outlined,
             label: '${l10n.language} (${l10n.localeName})',
           ),
-          onTap: () {
-            App.setLocale(
-                context,
-                l10n.localeName == 'fr'
-                    ? const Locale('en')
-                    : const Locale('fr'));
-          },
+          onTap: () => changeLanguage(context),
         ),
         PopupMenuItem(
           child: MoreButtonItem(

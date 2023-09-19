@@ -66,17 +66,22 @@ class _ChatScreenState extends State<ChatScreen> {
     final Color? color = widget.color != null ? widget.color!.primary : null;
     return Scaffold(
       appBar: AppBar(
-        title: Hero(
-          tag: widget.heroTag ?? 0,
-          child: TextButton(
-            onPressed: widget.onTitlePress ?? () {},
-            style: TextButton.styleFrom(foregroundColor: color),
-            child: Text(
-              widget.title,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            ),
+        title: TextButton(
+          onPressed: widget.onTitlePress ?? () {},
+          style: TextButton.styleFrom(foregroundColor: color),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Hero(
+                  tag: widget.heroTag ?? 0,
+                  child: Text(widget.title,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(color: color))),
+              const SizedBox(width: 5),
+              Icon(Icons.info_outline, color: color),
+            ],
           ),
         ),
       ),

@@ -83,5 +83,7 @@
   "pickAnIcon": "Choisis une icône",
   "searchInEnglish": "Rechercher (en anglais)",
   "pleasePickAnImage": "Merci de choisir une image",
-  "howGoodMemory": "Alors, t'as une bonne mémoire ?"
+  "howGoodMemory": "Alors, t'as une bonne mémoire ?",
+  "or": "OU",
+  "signInGoogle": "Se connecter avec Google"
 }

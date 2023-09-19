@@ -60,6 +60,7 @@ dependencies:
   cached_network_image: ^3.2.3
   ensure_visible_when_focused: ^1.1.1
   google_sign_in: ^6.1.5
+  circle_flags: ^3.0.1
 
 dev_dependencies:
   flutter_test:
