@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:circle_flags/circle_flags.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/data/staff.dart';
+import 'package:zeeyou/tools/change_language.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/decoration_circle.dart';
@@ -38,8 +40,8 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isAuthenticating = false;
   File? _selectedImage;
 
-  _createAccountInFirebase(UserCredential userCredentials, String username,
-      String userEmail, String userImageUrl) async {
+  Future<void> _createAccountInFirebase(UserCredential userCredentials,
+      String username, String userEmail, String userImageUrl) async {
     final userDocumentRef = FirebaseFirestore.instance
         .collection('users')
         .doc(userCredentials.user!.uid);
@@ -111,9 +113,17 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  _signInWithGoogle() async {
+  _signInWithGoogle(AppLocalizations l10n) async {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+    if (gUser == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.failedToConnect)));
+      }
+      return;
+    }
+    final GoogleSignInAuthentication gAuth = await gUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: gAuth.accessToken,
       idToken: gAuth.idToken,
@@ -143,7 +153,7 @@ class _AuthScreenState extends State<AuthScreen> {
         clipBehavior: Clip.antiAliasWithSaveLayer,
         children: [
           const Positioned(
-            top: 185,
+            top: 150,
             left: -100,
             child: DecorationCircle(),
           ),
@@ -153,12 +163,21 @@ class _AuthScreenState extends State<AuthScreen> {
             child: DecorationCircle(),
           ),
           Positioned.fill(
-              top: 100,
+              top: 80,
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Text(_isLogin ? l10n.connection : l10n.createAccount,
                     style: Theme.of(context).textTheme.headlineLarge!),
               )),
+          Positioned(
+              bottom: 20,
+              left: 15,
+              child: GestureDetector(
+                  onTap: () => changeLanguage(context),
+                  child: CircleFlag(
+                    getCountryCodeFromLocale(
+                        Localizations.localeOf(context).languageCode,
+                  )))),
           Center(
             child: SingleChildScrollView(
               child: Card(
@@ -167,12 +186,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 margin: const EdgeInsets.only(
                   left: 35,
                   right: 35,
-                  top: 120,
+                  top: 90,
                 ),
                 child: Container(
-                  // alignment: Alignment.center,
-                  // height: 550,
-                  padding: const EdgeInsets.all(28),
+                  padding: const EdgeInsets.only(
+                      left: 28, right: 28, top: 20, bottom: 15),
                   child: Form(
                     key: _form,
                     child: Column(
@@ -255,10 +273,23 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ? l10n.createAccount
                                 : l10n.alreadyHaveAccount),
                           ),
-                        TextButton.icon(
-                          onPressed: _signInWithGoogle,
+                        Row(children: [
+                          Expanded(
+                              child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Divider())),
+                          Text(l10n.or,
+                              style: TextStyle(color: Colors.grey[600])),
+                          Expanded(
+                              child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Divider())),
+                        ]),
+                        const SizedBox(height: 10),
+                        OutlinedButton.icon(
+                          onPressed: () => _signInWithGoogle(l10n),
                           icon: Icon(MdiIcons.google),
-                          label: const Text('Sign in with Google'),
+                          label: Text(l10n.signInGoogle),
                         ),
                       ],
                     ),

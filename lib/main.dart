@@ -52,7 +52,7 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     // Localizations.localeOf(context);
-    _fetchLocale(const Locale('en')).then((locale) {
+    _fetchLocale(const Locale('en', 'US')).then((locale) {
       setLocale(locale);
     });
     FlutterNativeSplash.remove();
