@@ -174,10 +174,8 @@ class _AuthScreenState extends State<AuthScreen> {
               left: 15,
               child: GestureDetector(
                   onTap: () => changeLanguage(context),
-                  child: CircleFlag(
-                    getCountryCodeFromLocale(
-                        Localizations.localeOf(context).languageCode,
-                  )))),
+                  child: CircleFlag(getCountryCodeFromLocale(
+                      Localizations.localeOf(context).languageCode)))),
           Center(
             child: SingleChildScrollView(
               child: Card(
