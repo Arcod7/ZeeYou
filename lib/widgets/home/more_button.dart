@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zeeyou/data/staff.dart';
 import 'package:zeeyou/screens/admin_chat.dart';
 import 'package:zeeyou/screens/chat.dart';
-import 'package:zeeyou/screens/donate_screen.dart';
+import 'package:zeeyou/screens/donate.dart';
+import 'package:zeeyou/screens/settings.dart';
 import 'package:zeeyou/tools/change_language.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 
@@ -73,13 +74,11 @@ class MoreButton extends StatelessWidget {
           onTap: () => changeLanguage(context),
         ),
         PopupMenuItem(
+          value: 'settings',
           child: MoreButtonItem(
             icon: Icons.settings_outlined,
             label: l10n.settings,
           ),
-          onTap: () {
-            debugPrint(loggedUserId);
-          },
         ),
         PopupMenuItem(
           child: MoreButtonItem(
@@ -111,6 +110,10 @@ class MoreButton extends StatelessWidget {
         if (value == 'donate') {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (ctx) => const DonateScreen()));
+        }
+        if (value == 'settings') {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => const SettingsScreen()));
         }
       },
     );
