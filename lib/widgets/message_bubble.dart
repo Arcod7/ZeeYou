@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:badges/badges.dart' as badges;
 
-class MessageBubble extends StatefulWidget {
+class MessageBubble extends StatelessWidget {
   const MessageBubble.first({
     super.key,
     required this.userImage,
     required this.username,
-    required this.messageId,
     required this.message,
+    required this.messageId,
+    required this.isMessageLiked,
     required this.isMe,
     required this.chatCollectionRef,
   }) : isFirstInSequence = true;
@@ -18,6 +19,7 @@ class MessageBubble extends StatefulWidget {
     super.key,
     required this.message,
     required this.messageId,
+    required this.isMessageLiked,
     required this.isMe,
     required this.chatCollectionRef,
   })  : isFirstInSequence = false,
@@ -29,40 +31,35 @@ class MessageBubble extends StatefulWidget {
   final String? username;
   final String messageId;
   final String message;
+  final bool? isMessageLiked;
   final bool isMe;
   final CollectionReference<Map<String, dynamic>> chatCollectionRef;
 
-  @override
-  State<MessageBubble> createState() => _MessageBubbleState();
-}
-
-class _MessageBubbleState extends State<MessageBubble> {
-  bool _isReactionVisible = false;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Stack(
       children: [
-        if (widget.userImage != null)
+        if (userImage != null)
           Positioned(
             top: 15,
             // Align user image to the right, if the message is from me.
-            right: widget.isMe ? 0 : null,
+            right: isMe ? 0 : null,
             child: CircleAvatar(
               backgroundImage: NetworkImage(
-                widget.userImage!,
+                userImage!,
               ),
               backgroundColor: theme.colorScheme.primary.withAlpha(180),
               radius: 23,
             ),
           ),
         GestureDetector(
+          onLongPress: () => chatCollectionRef.doc(messageId).delete(),
           onDoubleTap: () {
-            setState(() {
-              _isReactionVisible = !_isReactionVisible;
+            chatCollectionRef.doc(messageId).update({
+              'isLiked': !(isMessageLiked ?? false),
             });
-            // chatCollectionRef.doc(messageId).delete();
           },
           child: Container(
             // Add some margin to the edges of the messages, to allow space for the
@@ -71,24 +68,23 @@ class _MessageBubbleState extends State<MessageBubble> {
             child: Row(
               // The side of the chat screen the message should show at.
               mainAxisAlignment:
-                  widget.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
                 Column(
-                  crossAxisAlignment: widget.isMe
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
                     // First messages in the sequence provide a visual buffer at
                     // the top.
-                    if (widget.isFirstInSequence) const SizedBox(height: 18),
-                    if (widget.username != null)
+                    if (isFirstInSequence) const SizedBox(height: 18),
+                    if (username != null)
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 13,
                           right: 13,
                         ),
                         child: Text(
-                          widget.username!,
+                          username!,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
@@ -110,15 +106,16 @@ class _MessageBubbleState extends State<MessageBubble> {
                         ),
                         badgeColor: Colors.white,
                       ),
-                      position: badges.BadgePosition.bottomStart(bottom: 0, start: 10),
+                      position: badges.BadgePosition.bottomStart(
+                          bottom: 0, start: 10),
                       // backgroundColor: Colors.white,
                       // offset: const Offset(20, -5),
                       // alignment: Alignment.bottomLeft,
                       // largeSize: 26,
-                      showBadge: _isReactionVisible,
+                      showBadge: isMessageLiked ?? false,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: widget.isMe
+                          color: isMe
                               ? Colors.grey[300]
                               : theme.colorScheme.secondary.withAlpha(200),
                           // Only show the message bubble's "speaking edge" if first in
@@ -126,10 +123,10 @@ class _MessageBubbleState extends State<MessageBubble> {
                           // Whether the "speaking edge" is on the left or right depends
                           // on whether or not the message bubble is the current user.
                           borderRadius: BorderRadius.only(
-                            topLeft: !widget.isMe && widget.isFirstInSequence
+                            topLeft: !isMe && isFirstInSequence
                                 ? Radius.zero
                                 : const Radius.circular(12),
-                            topRight: widget.isMe && widget.isFirstInSequence
+                            topRight: isMe && isFirstInSequence
                                 ? Radius.zero
                                 : const Radius.circular(12),
                             bottomLeft: const Radius.circular(12),
@@ -149,15 +146,15 @@ class _MessageBubbleState extends State<MessageBubble> {
                           top: 4,
                           left: 12,
                           right: 12,
-                          bottom: _isReactionVisible ? 20 : 4,
+                          bottom: (isMessageLiked ?? false) ? 20 : 4,
                         ),
                         child: Text(
-                          widget.message,
+                          message,
                           style: TextStyle(
                             // Add a little line spacing to make the text look nicer
                             // when multilined.
                             height: 1.3,
-                            color: widget.isMe
+                            color: isMe
                                 ? Colors.black87
                                 : theme.colorScheme.onSecondary,
                           ),

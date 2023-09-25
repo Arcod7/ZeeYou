@@ -64,6 +64,7 @@ class ChatMessages extends StatelessWidget {
                 chatCollectionRef: chatCollectionRef,
                 message: chatMessage['text'],
                 messageId: messageId,
+                isMessageLiked: chatMessage['isLiked'],
                 isMe: authenticatedUser.uid == currentMessageUserId,
               );
             } else {
@@ -73,6 +74,7 @@ class ChatMessages extends StatelessWidget {
                 username: chatMessage['username'],
                 message: chatMessage['text'],
                 messageId: messageId,
+                isMessageLiked: chatMessage['isLiked'],
                 isMe: authenticatedUser.uid == currentMessageUserId,
               );
             }

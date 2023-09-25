@@ -274,14 +274,14 @@ class _AuthScreenState extends State<AuthScreen> {
                         Row(children: [
                           Expanded(
                               child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Divider())),
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: const Divider())),
                           Text(l10n.or,
                               style: TextStyle(color: Colors.grey[600])),
                           Expanded(
                               child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Divider())),
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: const Divider())),
                         ]),
                         const SizedBox(height: 10),
                         OutlinedButton.icon(
