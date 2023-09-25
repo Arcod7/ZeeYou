@@ -225,6 +225,8 @@ class _SetEventScreenState extends State<SetEventScreen>
                 onChanged: (newColorHue) => setState(
                     () => _newEvent.colors = getColorShade(newColorHue)),
               ),
+              const Divider(),
+              const SizedBox(height:20),
               Text('${l10n.useful} (${l10n.optional}) :',
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 5),
