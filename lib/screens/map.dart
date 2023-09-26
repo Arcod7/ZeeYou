@@ -91,11 +91,11 @@ class _MapScreenState extends State<MapScreen> {
     if (response.statusCode == 200) {
       final location =
           json.decode(response.body)['result']['geometry']['location'];
-      final LatLng locationLatLng = LatLng(
-        location['lat'],
-        location['lng'],
-      );
-      _mapController.animateCamera(CameraUpdate.newLatLng(locationLatLng));
+      setState(() => _pickedLocation = LatLng(
+            location['lat'],
+            location['lng'],
+          ));
+      _mapController.animateCamera(CameraUpdate.newLatLng(_pickedLocation!));
     } else {
       throw Exception('Failed to load predictions');
     }
