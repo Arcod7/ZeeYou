@@ -19,8 +19,8 @@ class BigUserImage extends StatelessWidget {
             imageUrl: imageUrl,
             width: double.infinity,
             height: double.infinity,
-            fit: BoxFit.cover,
-            // repeat: ImageRepeat.repeat,
+            fit: BoxFit.none,
+            repeat: ImageRepeat.repeat,
           )),
     );
   }

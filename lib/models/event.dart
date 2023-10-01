@@ -22,7 +22,7 @@ class Event {
     required this.colors,
     this.type,
     required this.organizedBy,
-    this.maxPeople,
+    this.maxPeople = 0,
     required this.links,
     this.isFavorite = false,
     required this.id,
@@ -38,7 +38,7 @@ class Event {
   ColorShade colors;
   EventType? type;
   String organizedBy;
-  int? maxPeople;
+  int maxPeople;
   Map<String, dynamic> links;
   bool isFavorite;
 }
