@@ -51,6 +51,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    //TODO: get user locale and set it by default
     // Localizations.localeOf(context);
     _fetchLocale(const Locale('en', 'US')).then((locale) {
       setLocale(locale);

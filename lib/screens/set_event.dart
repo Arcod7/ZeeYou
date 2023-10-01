@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -104,6 +105,7 @@ class _SetEventScreenState extends State<SetEventScreen>
           : {},
       'user_list': [loggedUserId],
       'links': _newEvent.links,
+      'maxPeople': _newEvent.maxPeople,
     };
 
     if (_isModifying) {
@@ -146,11 +148,13 @@ class _SetEventScreenState extends State<SetEventScreen>
         setState(() => _isActionButtonExtended = true);
       }
     });
+    _maxPeopleController.text = _newEvent.maxPeople.toString();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _maxPeopleController.dispose();
     super.dispose();
   }
 
@@ -168,9 +172,14 @@ class _SetEventScreenState extends State<SetEventScreen>
   bool _isActionButtonExtended = true;
   bool _isSubmitting = false;
 
+  final TextEditingController _maxPeopleController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    if (_newEvent.maxPeople == 0) {
+      _maxPeopleController.text = l10n.infinity;
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: _newEvent.colors.light,
@@ -188,13 +197,6 @@ class _SetEventScreenState extends State<SetEventScreen>
             label: Text(_isModifying ? l10n.modify : l10n.createThisEvent),
             isExtended: _isActionButtonExtended,
           )),
-      // Padding(
-      //   padding: const EdgeInsets.symmetric(horizontal: 20),
-      //   child: ZeeButton(
-      //       text: _isModifying ? l10n.modify : l10n.createThisEvent,
-      //       onPressed: _submit),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Form(
@@ -226,7 +228,7 @@ class _SetEventScreenState extends State<SetEventScreen>
                     () => _newEvent.colors = getColorShade(newColorHue)),
               ),
               const Divider(),
-              const SizedBox(height:20),
+              const SizedBox(height: 20),
               Text('${l10n.useful} (${l10n.optional}) :',
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 5),
@@ -289,27 +291,74 @@ class _SetEventScreenState extends State<SetEventScreen>
               const SizedBox(height: 20),
               inputLabel(
                   l10n.maxNumberPeople +
-                      (_newEvent.maxPeople != null
-                          ? _newEvent.maxPeople!.round().toString()
+                      (_newEvent.maxPeople != 0
+                          ? _newEvent.maxPeople.round().toString()
                           : l10n.infinity),
                   10),
-              Slider.adaptive(
-                activeColor: Colors.amber,
-                min: 0.0,
-                max: 101.0,
-                divisions: 100,
-                value: (_newEvent.maxPeople ?? 0).toDouble(),
-                onChanged: (value) {
-                  if (value <= 0.1) {
-                    _newEvent.maxPeople = null;
-                  } else {
-                    setState(() => _newEvent.maxPeople = value.round());
-                  }
-                },
-                label: _newEvent.maxPeople != null
-                    ? _newEvent.maxPeople!.round().toString()
-                    : 'Nono josé',
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton.filledTonal(
+                      onPressed: () {
+                        if (_newEvent.maxPeople > 0) {
+                          setState(() => _newEvent.maxPeople--);
+                          _maxPeopleController.text =
+                              _newEvent.maxPeople.toString();
+                        }
+                        if (_newEvent.maxPeople == 0) {
+                          _maxPeopleController.text = l10n.infinity;
+                        }
+                      },
+                      icon: Icon(MdiIcons.minus)),
+                  SizedBox(
+                    width: 150,
+                    child: TextFormField(
+                      controller: _maxPeopleController,
+                      onSaved: (newValue) => _newEvent.maxPeople =
+                          newValue != null ? int.tryParse(newValue)! : 0,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      onChanged: (number) {
+                        setState(() {
+                          _newEvent.maxPeople = int.tryParse(number) ?? 0;
+                        });
+                      },
+                    ),
+                  ),
+                  IconButton.filledTonal(
+                      onPressed: () {
+                        setState(() => _newEvent.maxPeople++);
+                        _maxPeopleController.text =
+                            _newEvent.maxPeople.toString();
+                      },
+                      icon: Icon(MdiIcons.plus)),
+                  IconButton.filledTonal(
+                      onPressed: () {
+                        setState(() => _newEvent.maxPeople = 0);
+                        _maxPeopleController.text = l10n.infinity;
+                      },
+                      icon: Icon(MdiIcons.infinity)),
+                ],
               ),
+              // Slider.adaptive(
+              //   activeColor: Colors.amber,
+              //   min: 0.0,
+              //   max: 101.0,
+              //   divisions: 100,
+              //   value: (_newEvent.maxPeople ?? 0).toDouble(),
+              //   onChanged: (value) {
+              //     if (value <= 0.1) {
+              //       _newEvent.maxPeople = null;
+              //     } else {
+              //       setState(() => _newEvent.maxPeople = value.round());
+              //     }
+              //   },
+              //   label: _newEvent.maxPeople != null
+              //       ? _newEvent.maxPeople!.round().toString()
+              //       : 'Nono josé',
+              // ),
               inputLabel(l10n.putLinkIfYouWant, 20),
               const SizedBox(height: 10),
               ExternalLink(

@@ -37,6 +37,7 @@ class EventListStream extends StatelessWidget {
               )
             : null,
         links: event['links'] ?? {},
+        maxPeople: event['maxPeople'] ?? 0,
         id: eventId,
       );
 
