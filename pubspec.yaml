@@ -42,14 +42,14 @@ dependencies:
   firebase_messaging: ^14.6.5
   intl: any
   material_design_icons_flutter: ^7.0.7296
-  uuid: ^3.0.7
+  uuid: ^4.1.0
   flutter_launcher_icons: ^0.13.1
   google_maps_flutter: ^2.4.0
   http: ^1.1.0
   location: ^5.0.1
   flutter_iconpicker: ^3.2.4
   flutter_riverpod: ^2.3.6
-  searchable_listview: '2.5.1'
+  searchable_listview: '2.7.1'
   url_launcher: ^6.1.12
   flutter_localizations:
     sdk: flutter
