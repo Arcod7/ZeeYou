@@ -103,7 +103,7 @@ class UsersListScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
               child: SearchableList(
                 initialList: loadedUsers,
-                builder: (userId) {
+                builder: (a, userId, b) {
                   final user = loadedUsers[userId];
                   final loadedUser = user.data();
 
