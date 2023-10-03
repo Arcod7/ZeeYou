@@ -254,12 +254,11 @@ class _AuthScreenState extends State<AuthScreen> {
                         const SizedBox(
                           height: 12,
                         ),
-                        if (_isAuthenticating)
-                          const CircularProgressIndicator(),
-                        if (!_isAuthenticating)
-                          ZeeButton(
-                              text: _isLogin ? l10n.connection : l10n.register,
-                              onPressed: _submit),
+                        ZeeButton(
+                          text: _isLogin ? l10n.connection : l10n.register,
+                          onPressed: _submit,
+                          isLoading: _isAuthenticating,
+                        ),
                         if (!_isAuthenticating)
                           TextButton(
                             onPressed: () {
@@ -274,18 +273,22 @@ class _AuthScreenState extends State<AuthScreen> {
                         Row(children: [
                           Expanded(
                               child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   child: const Divider())),
                           Text(l10n.or,
                               style: TextStyle(color: Colors.grey[600])),
                           Expanded(
                               child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   child: const Divider())),
                         ]),
                         const SizedBox(height: 10),
                         OutlinedButton.icon(
-                          onPressed: () => _signInWithGoogle(l10n),
+                          onPressed: () => _isAuthenticating
+                              ? null
+                              : _signInWithGoogle(l10n),
                           icon: Icon(MdiIcons.google),
                           label: Text(l10n.signInGoogle),
                         ),

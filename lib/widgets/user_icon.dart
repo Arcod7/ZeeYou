@@ -37,8 +37,10 @@ class UserIcon extends StatelessWidget {
               ? const CircularProgressIndicator()
               : GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (ctx) => BigUserImage(imageUrl: data.data!)));
+                    Navigator.of(context).push(PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (_, __, ___) =>
+                            (BigUserImage(imageUrl: data.data!))));
                   },
                   child: Hero(
                       tag: data.data!,
