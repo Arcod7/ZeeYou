@@ -5,9 +5,11 @@ class ZeeButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   final void Function()? onPressed;
+  final bool isLoading;
   final String text;
 
   @override
@@ -23,9 +25,16 @@ class ZeeButton extends StatelessWidget {
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-        child: Text(
-          text,
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        child: Row(
+          mainAxisAlignment: isLoading ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
+          children: [
+            if (isLoading)
+              const CircularProgressIndicator(),
+            Text(
+              text,
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            ),
+          ],
         ),
       ),
     );
