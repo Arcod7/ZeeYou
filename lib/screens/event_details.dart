@@ -140,7 +140,7 @@ class EventDetailsScreen extends StatelessWidget {
                       onPressed: () async {
                         userList = await getUserList();
                         if (context.mounted) {
-                          final userIds = await Navigator.of(context).push(
+                          Set<String>? userIds = await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (ctx) => UsersListScreen(
                                 title: l10n.addUsersToEvent,
@@ -148,6 +148,9 @@ class EventDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           );
+                          if (userIds == null || userIds.isEmpty) {
+                            return;
+                          }
                           await FirebaseFirestore.instance
                               .collection('events')
                               .doc(event.id)
@@ -163,7 +166,7 @@ class EventDetailsScreen extends StatelessWidget {
                       onPressed: () async {
                         userList = await getUserList();
                         if (context.mounted) {
-                          final userIds = await Navigator.of(context).push(
+                          Set<String>? userIds = await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (ctx) {
                                 return UsersListScreen(
@@ -173,6 +176,9 @@ class EventDetailsScreen extends StatelessWidget {
                               },
                             ),
                           );
+                          if (userIds == null || userIds.isEmpty) {
+                            return;
+                          }
                           await FirebaseFirestore.instance
                               .collection('events')
                               .doc(event.id)

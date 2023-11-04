@@ -147,6 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: Stack(
@@ -157,20 +158,23 @@ class _AuthScreenState extends State<AuthScreen> {
             left: -100,
             child: DecorationCircle(),
           ),
-          const Positioned(
-            bottom: 40,
+          Positioned(
+            top: screenSize.height - 200 - 40,
             right: -50,
-            child: DecorationCircle(),
+            child: const DecorationCircle(),
           ),
           Positioned.fill(
               top: 80,
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Text(_isLogin ? l10n.connection : l10n.createAccount,
-                    style: Theme.of(context).textTheme.headlineLarge!),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge!
+                        .copyWith(color: Colors.black87)),
               )),
           Positioned(
-              bottom: 20,
+              top: screenSize.height - 50 - 20,
               left: 15,
               child: GestureDetector(
                   onTap: () => changeLanguage(context),
