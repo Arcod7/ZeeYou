@@ -4,51 +4,38 @@ import 'package:searchable_listview/searchable_listview.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class UserTile extends StatefulWidget {
+class UserTile extends StatelessWidget {
   const UserTile({
     super.key,
     required this.loadedUser,
-    required this.userId,
-    required this.selectedUserIds,
+    required this.isChecked,
+    required this.onSelectedUser,
   });
 
   final Map<String, dynamic> loadedUser;
-  final String userId;
-  final Set<String> selectedUserIds;
+  final bool isChecked;
+  final void Function() onSelectedUser;
 
-  @override
-  State<UserTile> createState() => _UserTileState();
-}
-
-class _UserTileState extends State<UserTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(
-          widget.loadedUser['image_url'],
+          loadedUser['image_url'],
         ),
       ),
-      title: Text('${widget.loadedUser['username']}'),
-      trailing: Icon(widget.selectedUserIds.contains(widget.userId)
+      title: Text('${loadedUser['username']}'),
+      trailing: Icon(isChecked
           ? Icons.check_box_outlined
           : Icons.check_box_outline_blank_outlined),
       onTap: () {
-        if (widget.selectedUserIds.contains(widget.userId)) {
-          setState(() {
-            widget.selectedUserIds.remove(widget.userId);
-          });
-        } else {
-          setState(() {
-            widget.selectedUserIds.add(widget.userId);
-          });
-        }
+        onSelectedUser();
       },
     );
   }
 }
 
-class UsersListScreen extends StatelessWidget {
+class UsersListScreen extends StatefulWidget {
   const UsersListScreen({
     super.key,
     required this.title,
@@ -61,20 +48,34 @@ class UsersListScreen extends StatelessWidget {
   final List<String>? filterNotIn;
 
   @override
+  State<UsersListScreen> createState() => _UsersListScreenState();
+}
+
+class _UsersListScreenState extends State<UsersListScreen> {
+  late final Set<String> selectedUserIds;
+
+  @override
+  void initState() {
+    setState(() {
+      selectedUserIds = {};
+    });
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final Set<String> selectedUserIds = {};
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save_outlined),
-            onPressed: () {
-              Navigator.of(context).pop(selectedUserIds);
-            },
-          )
+          if (selectedUserIds.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.save_outlined),
+              onPressed: () {
+                Navigator.of(context).pop(selectedUserIds);
+              },
+            )
         ],
       ),
       body: StreamBuilder(
@@ -83,10 +84,6 @@ class UsersListScreen extends StatelessWidget {
               .orderBy('username')
               .snapshots(),
           builder: (context, userSnapshots) {
-            if (userSnapshots.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
             if (!userSnapshots.hasData || userSnapshots.data!.docs.isEmpty) {
               return Center(
                 child: Text(l10n.noUsersForNow),
@@ -108,15 +105,23 @@ class UsersListScreen extends StatelessWidget {
                   final loadedUser = user.data();
 
                   if (user.id == loggedUserId ||
-                      (filterIn != null && !filterIn!.contains(user.id)) ||
-                      (filterNotIn != null && filterNotIn!.contains(user.id))) {
+                      (widget.filterIn != null &&
+                          !widget.filterIn!.contains(user.id)) ||
+                      (widget.filterNotIn != null &&
+                          widget.filterNotIn!.contains(user.id))) {
                     return const SizedBox();
                   }
 
                   return UserTile(
                     loadedUser: loadedUser,
-                    userId: user.id,
-                    selectedUserIds: selectedUserIds,
+                    isChecked: selectedUserIds.contains(user.id),
+                    onSelectedUser: () {
+                      if (selectedUserIds.contains(user.id)) {
+                        setState(() => selectedUserIds.remove(user.id));
+                      } else {
+                        setState(() => selectedUserIds.add(user.id));
+                      }
+                    },
                   );
                 },
                 filter: (value) => loadedUsers
@@ -131,9 +136,7 @@ class UsersListScreen extends StatelessWidget {
                 inputDecoration: InputDecoration(
                   labelText: l10n.searchFriend,
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      width: 1.0,
-                    ),
+                    borderSide: const BorderSide(width: 1.0),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
