@@ -1,6 +1,4 @@
 {
-  "lang": "English",
-  "locale": "en",
   "hello": "Hello",
   "events": "Events",
   "addImage": "Add an Image",
@@ -16,11 +14,13 @@
   "useful": "Useful",
   "futile": "Futile",
   "optional": "optional",
+  
   "createYourEvent": "Create your event !",
   "createThisEvent": "Create this event",
   "nameOfEvent": "Event's name",
   "modifyYourEvent": "Modify your event",
   "modify": "Modify",
+  
   "noMessagesForNow": "No messages for now.",
   "noEventsForNow": "No events for now.",
   "noLocationForNow": "No location for now.",
@@ -29,12 +29,21 @@
   "failedToConnect": "You didn't make it and we don't know why",
   "validEmailPlease": "Please enter valid email.",
   "minLetter": "At lease {number} characters minimum",
-  "@minLetter/description": "When you want to limit the number of letters",
-  "@minLetter/placeHolders/number/type": "num",
-  "@minLetter/placeHolders/number/format": "compact",
+  "@minLetter": {
+    "description": "When you want to limit the number of letters",
+    "placeHolders": {
+      "number": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  
   "errorPlaceHolder": "You've got into some trouble: ",
+  
   "waitHere": "Wait !",
   "reallyWantToDelete": "Do you really want to delete this event ?",
+  
   "adminChat": "King's chat",
   "staffChat": "Chat with us",
   "donate": "Donate",
@@ -43,6 +52,7 @@
   "settings": "Settings",
   "save": "Save",
   "gettingLocation": "Getting location...",
+  
   "chooseIcon": "Choose an icon",
   "greatChoice": "Great choice !",
   "maxNumberPeople": "Max number of people : ",
@@ -53,7 +63,9 @@
   "chooseDate": "Choose a date",
   "chooseLocation": "Choose a location",
   "yourPos": "Your position",
+
   "searchFriend": "Search a friend !",
+
   "loading": "Loading...",
   "cancel": "Annuler",
   "deleteForever": "Delete forever",

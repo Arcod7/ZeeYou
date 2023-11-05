@@ -42,7 +42,7 @@ class _LinkDateState extends State<LinkDate> {
     final l10n = AppLocalizations.of(context)!;
     return ExternalLink(
       text: widget.date != null
-          ? DateFormat.yMMMMEEEEd(Localizations.localeOf(context).languageCode)
+          ? DateFormat.yMMMMEEEEd(l10n.locale)
               .format(widget.date!)
               .capitalize()
           : l10n.chooseDate,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/screens/event_details.dart';
@@ -86,6 +87,23 @@ class EventCard extends StatelessWidget {
         );
   }
 
+  String formatDateThreeLines(DateTime date, String locale) {
+    String formattedDate =
+        DateFormat.yMMMMEEEEd(locale).format(date).capitalize();
+
+    if (locale == 'es') {
+      return formattedDate.replaceAll(" de", "\nde");
+    } else if (locale == 'en') {
+      List<String> splittedDate = formattedDate.split(' ');
+      return "${splittedDate[0]}\n${splittedDate[1].capitalize()}\n${splittedDate[2]}  ${splittedDate[3]}";
+    } else if (locale == 'fr') {
+      List<String> splittedDate = formattedDate.split(' ');
+      return "${splittedDate[0]} ${splittedDate[1]}\n${splittedDate[2].capitalize()}\n${splittedDate[3]}";
+    } else {
+      return "Locale unknown";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     timeago.setLocaleMessages('fr', timeago.FrMessages());
@@ -117,16 +135,19 @@ class EventCard extends StatelessWidget {
                   color: event.colors.light,
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  event.date != null
-                      ? timeago.format(
-                          DateTime.now()
-                              .add(event.date!.difference(DateTime.now())),
-                          locale: Localizations.localeOf(context).languageCode,
-                          allowFromNow: true)
-                      : l10n.chooseDate,
-                  style: const TextStyle(color: Colors.black87),
-                  textAlign: TextAlign.center,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    event.date != null
+                        ? formatDateThreeLines(event.date!, l10n.locale)
+                        //"${DateFormat("EEEE d", l10n.locale).format(event.date!).capitalize()}${DateFormat("MMMM", l10n.locale).format(event.date!).capitalize()}${DateFormat("y", l10n.locale).format(event.date!)}"
+                        : l10n.chooseDate.replaceFirst(' ', '\n'),
+                    style: const TextStyle(
+                        color: Colors.black87,
+                        height: 1.6,
+                        overflow: TextOverflow.ellipsis),
+                    textAlign: TextAlign.center,
+                  ),
                 )),
           ),
           title: Hero(
