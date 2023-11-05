@@ -14,7 +14,7 @@ class EventDetailsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
+      padding: const EdgeInsets.only(left: 25, right: 25, top: 50),
       child: Stack(
         children: [
           Positioned(

@@ -58,6 +58,7 @@ class _SetEventScreenState extends State<SetEventScreen>
   }
 
   void _submit() async {
+    print("submitting");
     setState(() => _isSubmitting = true);
     final isValid = _form.currentState!.validate();
 
@@ -67,10 +68,12 @@ class _SetEventScreenState extends State<SetEventScreen>
       return;
     }
 
+    print("before save");
     _form.currentState!.save();
+    print("After save");
 
     final username = await getUsername(loggedUserId);
-
+    print("before jsonEvent");
     final Map<String, dynamic> jsonEvent = {
       'title': _newEvent.title,
       ..._newEvent.description != null
@@ -116,6 +119,7 @@ class _SetEventScreenState extends State<SetEventScreen>
     } else {
       FirebaseFirestore.instance.collection('events').add(jsonEvent);
     }
+    print("after jsonEvent");
 
     if (context.mounted) {
       Navigator.of(context).pop();
@@ -254,7 +258,7 @@ class _SetEventScreenState extends State<SetEventScreen>
               ExternalLink(
                 text: _newEvent.icon == null
                     ? l10n.chooseIcon
-                    : l10n.greatChoice + _newEvent.icon.toString(),
+                    : l10n.greatChoice, //+ _newEvent.icon.toString(),
                 icon: _newEvent.icon ?? Icons.search,
                 colors: _newEvent.colors,
                 onTap: () => _pickIcon(l10n),
@@ -314,8 +318,12 @@ class _SetEventScreenState extends State<SetEventScreen>
                     width: 150,
                     child: TextFormField(
                       controller: _maxPeopleController,
-                      onSaved: (newValue) => _newEvent.maxPeople =
-                          newValue != null ? int.tryParse(newValue)! : 0,
+                      onSaved: (newValue) =>
+                          _newEvent.maxPeople = newValue != null
+                              ? int.tryParse(newValue) != null
+                                  ? int.tryParse(newValue)!
+                                  : 0
+                              : 0,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly

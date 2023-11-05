@@ -26,7 +26,7 @@ class _ExternalLinksState extends State<ExternalLinks> {
     final links = widget.event.links;
     final l10n = AppLocalizations.of(context)!;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
         children: [
           LinkDate(
