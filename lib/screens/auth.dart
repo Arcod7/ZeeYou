@@ -113,7 +113,7 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  _signInWithGoogle(AppLocalizations l10n) async {
+  void _signInWithGoogle(AppLocalizations l10n) async {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     if (gUser == null) {
       if (context.mounted) {
@@ -263,17 +263,18 @@ class _AuthScreenState extends State<AuthScreen> {
                           onPressed: _submit,
                           isLoading: _isAuthenticating,
                         ),
-                        if (!_isAuthenticating)
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _isLogin = !_isLogin;
-                              });
-                            },
-                            child: Text(_isLogin
-                                ? l10n.createAccount
-                                : l10n.alreadyHaveAccount),
-                          ),
+                        TextButton(
+                          onPressed: !_isAuthenticating
+                              ? () {
+                                  setState(() {
+                                    _isLogin = !_isLogin;
+                                  });
+                                }
+                              : null,
+                          child: Text(_isLogin
+                              ? l10n.createAccount
+                              : l10n.alreadyHaveAccount),
+                        ),
                         Row(children: [
                           Expanded(
                               child: Container(
@@ -290,9 +291,9 @@ class _AuthScreenState extends State<AuthScreen> {
                         ]),
                         const SizedBox(height: 10),
                         OutlinedButton.icon(
-                          onPressed: () => _isAuthenticating
-                              ? null
-                              : _signInWithGoogle(l10n),
+                          onPressed: !_isAuthenticating
+                              ? () => _signInWithGoogle(l10n)
+                              : null,
                           icon: Icon(MdiIcons.google),
                           label: Text(l10n.signInGoogle),
                         ),
@@ -322,25 +323,25 @@ class _AuthScreenState extends State<AuthScreen> {
           //         });
           //       }),
           // ),
-          // Positioned(
-          //   bottom: 40,
-          //   right: 40,
-          //   child: TextButton.icon(
-          //       icon: const Icon(Icons.send),
-          //       label: const Text('Malek'),
-          //       onPressed: () async {
-          //         setState(() {
-          //           _isAuthenticating = true;
-          //         });
-          //         await _firebase.signInWithEmailAndPassword(
-          //           email: 'malek@gmail.com',
-          //           password: '***REMOVED***',
-          //         );
-          //         setState(() {
-          //           _isAuthenticating = false;
-          //         });
-          //       }),
-          // ),
+          Positioned(
+            bottom: 40,
+            right: 40,
+            child: TextButton.icon(
+                icon: const Icon(Icons.send),
+                label: const Text('Malek'),
+                onPressed: () async {
+                  setState(() {
+                    _isAuthenticating = true;
+                  });
+                  await _firebase.signInWithEmailAndPassword(
+                    email: 'malek@gmail.com',
+                    password: '***REMOVED***',
+                  );
+                  setState(() {
+                    _isAuthenticating = false;
+                  });
+                }),
+          ),
         ],
       ),
     );
