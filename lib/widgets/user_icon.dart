@@ -39,6 +39,7 @@ class UserIcon extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(PageRouteBuilder(
                         opaque: false,
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(opacity: animation, child: child),
                         pageBuilder: (_, __, ___) =>
                             (BigUserImage(imageUrl: data.data!))));
                   },
