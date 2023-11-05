@@ -25,17 +25,24 @@ class ZeeButton extends StatelessWidget {
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-        child: Row(
-          mainAxisAlignment: isLoading ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
-          children: [
-            if (isLoading)
-              const CircularProgressIndicator(),
-            Text(
-              text,
-              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-            ),
-          ],
-        ),
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : Text(
+                text,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+        // Row(
+        //   mainAxisAlignment: isLoading ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
+        //   children: [
+        //     if (isLoading)
+        //       const CircularProgressIndicator(),
+        //     Text(
+        //       text,
+        //       style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }
