@@ -1,0 +1,5 @@
+LINUX
+flutter run | grep -v "D/EGL_emulation"
+
+WINDOWS
+flutter run | Select-String -NotMatch "D/EGL_emulation"

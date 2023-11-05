@@ -65,12 +65,19 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final Color? color = widget.color != null ? widget.color!.primary : null;
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
+        flexibleSpace: widget.color != null
+            ? Container(
+                color: widget.color!.light,
+              )
+            : null,
         title: TextButton(
           onPressed: widget.onTitlePress ?? () {},
           style: TextButton.styleFrom(foregroundColor: color),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Hero(
                   tag: widget.heroTag ?? 0,
@@ -78,9 +85,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!
-                          .copyWith(color: color))),
+                          .copyWith(color: Colors.white))),
               const SizedBox(width: 5),
-              Icon(Icons.info_outline, color: color),
+              const Icon(Icons.info_outline, color: Colors.white),
             ],
           ),
         ),
@@ -90,10 +97,13 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: ChatMessages(
               chatCollectionRef: widget.chatCollectionRef,
+              color: widget.color,
+              // focusNode: _focusNode,
             ),
           ),
           NewMessage(
             chatCollectionRef: widget.chatCollectionRef,
+            color: widget.color,
           ),
         ],
       ),

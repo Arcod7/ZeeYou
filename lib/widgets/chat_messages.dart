@@ -1,3 +1,4 @@
+import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/widgets/message_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,9 +9,11 @@ class ChatMessages extends StatelessWidget {
   const ChatMessages({
     super.key,
     required this.chatCollectionRef,
+    this.color,
   });
 
   final CollectionReference<Map<String, dynamic>> chatCollectionRef;
+  final ColorShade? color;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +69,7 @@ class ChatMessages extends StatelessWidget {
                 messageId: messageId,
                 isMessageLiked: chatMessage['isLiked'],
                 isMe: authenticatedUser.uid == currentMessageUserId,
+                color: color,
               );
             } else {
               return MessageBubble.first(
@@ -76,6 +80,7 @@ class ChatMessages extends StatelessWidget {
                 messageId: messageId,
                 isMessageLiked: chatMessage['isLiked'],
                 isMe: authenticatedUser.uid == currentMessageUserId,
+                color: color,
               );
             }
           },

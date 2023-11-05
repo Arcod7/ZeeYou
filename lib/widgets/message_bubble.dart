@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:zeeyou/models/color_shade.dart';
 
 class MessageBubble extends StatelessWidget {
   const MessageBubble.first({
@@ -13,6 +14,7 @@ class MessageBubble extends StatelessWidget {
     required this.isMessageLiked,
     required this.isMe,
     required this.chatCollectionRef,
+    this.color,
   }) : isFirstInSequence = true;
 
   const MessageBubble.next({
@@ -22,6 +24,7 @@ class MessageBubble extends StatelessWidget {
     required this.isMessageLiked,
     required this.isMe,
     required this.chatCollectionRef,
+    this.color,
   })  : isFirstInSequence = false,
         userImage = null,
         username = null;
@@ -34,6 +37,7 @@ class MessageBubble extends StatelessWidget {
   final bool? isMessageLiked;
   final bool isMe;
   final CollectionReference<Map<String, dynamic>> chatCollectionRef;
+  final ColorShade? color;
 
   @override
   Widget build(BuildContext context) {
@@ -42,18 +46,17 @@ class MessageBubble extends StatelessWidget {
     return Stack(
       children: [
         if (userImage != null)
-          Positioned(
-            top: 15,
-            // Align user image to the right, if the message is from me.
-            right: isMe ? 0 : null,
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                userImage!,
+          if (!isMe)
+            Positioned(
+              top: 15,
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  userImage!,
+                ),
+                backgroundColor: theme.colorScheme.primary.withAlpha(180),
+                radius: 23,
               ),
-              backgroundColor: theme.colorScheme.primary.withAlpha(180),
-              radius: 23,
             ),
-          ),
         GestureDetector(
           onLongPress: () => chatCollectionRef.doc(messageId).delete(),
           onDoubleTap: () {
@@ -62,11 +65,8 @@ class MessageBubble extends StatelessWidget {
             });
           },
           child: Container(
-            // Add some margin to the edges of the messages, to allow space for the
-            // user's image.
-            margin: const EdgeInsets.symmetric(horizontal: 46),
+            margin: const EdgeInsets.only(left: 46, right: 0),
             child: Row(
-              // The side of the chat screen the message should show at.
               mainAxisAlignment:
                   isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
@@ -74,10 +74,8 @@ class MessageBubble extends StatelessWidget {
                   crossAxisAlignment:
                       isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
-                    // First messages in the sequence provide a visual buffer at
-                    // the top.
                     if (isFirstInSequence) const SizedBox(height: 18),
-                    if (username != null)
+                    if (username != null && !isMe)
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 13,
@@ -91,8 +89,6 @@ class MessageBubble extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                    // The "speech" box surrounding the message.
                     badges.Badge(
                       badgeContent: Icon(
                         MdiIcons.heart,
@@ -116,12 +112,11 @@ class MessageBubble extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           color: isMe
-                              ? Colors.grey[300]
+                              ? color != null
+                                  ? color!.veryLight
+                                  : theme.colorScheme.inversePrimary
+                                      .withAlpha(150)
                               : theme.colorScheme.secondary.withAlpha(200),
-                          // Only show the message bubble's "speaking edge" if first in
-                          // the chain.
-                          // Whether the "speaking edge" is on the left or right depends
-                          // on whether or not the message bubble is the current user.
                           borderRadius: BorderRadius.only(
                             topLeft: !isMe && isFirstInSequence
                                 ? Radius.zero
@@ -133,15 +128,11 @@ class MessageBubble extends StatelessWidget {
                             bottomRight: const Radius.circular(12),
                           ),
                         ),
-                        // Set some reasonable constraints on the width of the
-                        // message bubble so it can adjust to the amount of text
-                        // it should show.
-                        constraints: const BoxConstraints(maxWidth: 200),
+                        constraints: const BoxConstraints(maxWidth: 280),
                         padding: const EdgeInsets.symmetric(
                           vertical: 10,
                           horizontal: 14,
                         ),
-                        // Margin around the bubble.
                         margin: EdgeInsets.only(
                           top: 4,
                           left: 12,
@@ -151,8 +142,6 @@ class MessageBubble extends StatelessWidget {
                         child: Text(
                           message,
                           style: TextStyle(
-                            // Add a little line spacing to make the text look nicer
-                            // when multilined.
                             height: 1.3,
                             color: isMe
                                 ? Colors.black87

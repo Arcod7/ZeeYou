@@ -20,7 +20,7 @@ class AddEventButton extends ConsumerWidget {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 22),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 22),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: const LinearGradient(
@@ -31,7 +31,7 @@ class AddEventButton extends ConsumerWidget {
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               l10n.createNewEvent,
