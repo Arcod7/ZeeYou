@@ -58,7 +58,6 @@ class _SetEventScreenState extends State<SetEventScreen>
   }
 
   void _submit() async {
-    print("submitting");
     setState(() => _isSubmitting = true);
     final isValid = _form.currentState!.validate();
 
@@ -68,12 +67,10 @@ class _SetEventScreenState extends State<SetEventScreen>
       return;
     }
 
-    print("before save");
     _form.currentState!.save();
-    print("After save");
 
     final username = await getUsername(loggedUserId);
-    print("before jsonEvent");
+
     final Map<String, dynamic> jsonEvent = {
       'title': _newEvent.title,
       ..._newEvent.description != null
@@ -119,7 +116,6 @@ class _SetEventScreenState extends State<SetEventScreen>
     } else {
       FirebaseFirestore.instance.collection('events').add(jsonEvent);
     }
-    print("after jsonEvent");
 
     if (context.mounted) {
       Navigator.of(context).pop();
