@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zeeyou/widgets/home/add_event_button.dart';
+import 'package:zeeyou/widgets/home/home_circle.dart';
 import 'package:zeeyou/widgets/home/event_list_stream.dart';
 import 'package:zeeyou/widgets/home/more_button.dart';
 import 'package:zeeyou/widgets/user_icon.dart';
@@ -14,14 +15,14 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         leading: const UserIcon(),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        centerTitle: true,
-        title: Text('ZeeYou',
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+        centerTitle: false,
+        title: Text('ZeeYouCuauh',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         actions: const [MoreButton()],
       ),
-      backgroundColor: Colors.blueGrey[50],
+      backgroundColor: Colors.blueGrey[70],
       body: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 0),
         child: Column(
           children: [
             AddEventButton(),

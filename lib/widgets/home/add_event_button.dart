@@ -20,15 +20,21 @@ class AddEventButton extends ConsumerWidget {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 22),
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: const LinearGradient(
-            colors: [
-              Color.fromARGB(150, 255, 187, 57),
-              Color.fromARGB(150, 255, 116, 116),
-            ],
-          ),
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [
+                -0.2,
+                0.4,
+              ],
+              colors: [
+                Color(0xBFFFBA2C),
+                Color(0xFFFEE7B8),
+              ],
+            ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,11 +42,11 @@ class AddEventButton extends ConsumerWidget {
             Text(
               l10n.createNewEvent,
               style: const TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 20,
               ),
             ),
-            const Icon(Icons.add, color: Colors.white),
+            const Icon(Icons.arrow_forward, color: Colors.black),
           ],
         ),
       ),
