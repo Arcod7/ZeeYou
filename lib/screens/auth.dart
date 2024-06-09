@@ -309,7 +309,7 @@ class _AuthScreenState extends State<AuthScreen> {
           //   left: 40,
           //   child: TextButton.icon(
           //       icon: const Icon(Icons.send),
-          //       label: const Text('Admin'),
+          //       label: const Text('Test'),
           //       onPressed: () async {
           //         setState(() {
           //           _isAuthenticating = true;

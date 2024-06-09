@@ -62,6 +62,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 

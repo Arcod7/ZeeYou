@@ -21,7 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SettingsSection(
             title: const Text('Section 1'),
             tiles: [
-              SettingsTile.navigation(title: Text('yo'), value: Text('polo')),
+              SettingsTile.navigation(
+                  title: const Text('yo'), value: const Text('polo')),
               SettingsTile(
                 title: const Text('Language'),
                 value: const Text('English'),

@@ -86,12 +86,12 @@ class _NewMessageState extends State<NewMessage> {
             borderRadius: messageBorder,
           ),
           padding:
-              const EdgeInsets.only(left: 20, right: 1, bottom: 14, top: 14),
+              const EdgeInsets.only(left: 20, right: 12, bottom: 14, top: 14),
           child: Row(
             children: [
               Expanded(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 140.0),
+                  constraints: const BoxConstraints(minHeight: 70.0, maxHeight: 140.0),
                   child: TextField(
                     controller: _messageController,
                     focusNode: _focusNode,
@@ -100,7 +100,11 @@ class _NewMessageState extends State<NewMessage> {
                     enableSuggestions: true,
                     maxLines: null,
                     decoration: InputDecoration(
-                        border: InputBorder.none, hintText: l10n.sendMessage),
+                      border: InputBorder.none,
+                      hintText: l10n.sendMessage,
+                    ),
+                    // onSubmitted: (_) => print("yo le sang"),
+                    // onEditingComplete: () => print("hello le s"),
                   ),
                 ),
               ),

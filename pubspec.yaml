@@ -63,6 +63,7 @@ dependencies:
   circle_flags: ^3.0.1
   settings_ui: ^2.0.2
   badges: ^3.1.2
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:

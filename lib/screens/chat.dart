@@ -82,12 +82,9 @@ class _ChatScreenState extends State<ChatScreen> {
               Hero(
                   tag: widget.heroTag ?? 0,
                   child: Text(widget.title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(color: Colors.white))),
+                      style: Theme.of(context).textTheme.titleLarge!)),
               const SizedBox(width: 5),
-              const Icon(Icons.info_outline, color: Colors.white),
+              const Icon(Icons.info_outline),
             ],
           ),
         ),
