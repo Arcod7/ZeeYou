@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:searchable_listview/searchable_listview.dart';
+import 'package:zeeyou/models/user.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -12,7 +13,7 @@ class UserTile extends StatelessWidget {
     required this.onSelectedUser,
   });
 
-  final Map<String, dynamic> loadedUser;
+  final User loadedUser;
   final bool isChecked;
   final void Function() onSelectedUser;
 
@@ -21,10 +22,10 @@ class UserTile extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(
-          loadedUser['image_url'],
+          loadedUser.userImageUrl,
         ),
       ),
-      title: Text('${loadedUser['username']}'),
+      title: Text(loadedUser.username),
       trailing: Icon(isChecked
           ? Icons.check_box_outlined
           : Icons.check_box_outline_blank_outlined),
@@ -95,45 +96,39 @@ class _UsersListScreenState extends State<UsersListScreen> {
               return Center(child: Text(l10n.errorPlaceHolder));
             }
 
-            final loadedUsers = userSnapshots.data!.docs;
+            final loadedUsers = userSnapshots.data!.docs
+                .map((e) => User.fromJson({...e.data(), "userId": e.id}))
+                .toList();
 
             return Padding(
               padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
               child: SearchableList(
                 initialList: loadedUsers,
-                itemBuilder: (snapshot) {
-                  return Placeholder();
+                itemBuilder: (user) {
+                  if (user.userId == loggedUserId ||
+                      (widget.filterIn != null &&
+                          !widget.filterIn!.contains(user.userId)) ||
+                      (widget.filterNotIn != null &&
+                          widget.filterNotIn!.contains(user.userId))) {
+                    return const SizedBox();
+                  }
+
+                  return UserTile(
+                    loadedUser: user,
+                    isChecked: selectedUserIds.contains(user.userId),
+                    onSelectedUser: () {
+                      if (selectedUserIds.contains(user.userId)) {
+                        setState(() => selectedUserIds.remove(user.userId));
+                      } else {
+                        setState(() => selectedUserIds.add(user.userId));
+                      }
+                    },
+                  );
                 },
-                // itemBuilder: (a, userId, b) {
-                //   final user = loadedUsers[userId];
-                //   final loadedUser = user.data();
-
-                //   if (user.id == loggedUserId ||
-                //       (widget.filterIn != null &&
-                //           !widget.filterIn!.contains(user.id)) ||
-                //       (widget.filterNotIn != null &&
-                //           widget.filterNotIn!.contains(user.id))) {
-                //     return const SizedBox();
-                //   }
-
-                //   return UserTile(
-                //     loadedUser: loadedUser,
-                //     isChecked: selectedUserIds.contains(user.id),
-                //     onSelectedUser: () {
-                //       if (selectedUserIds.contains(user.id)) {
-                //         setState(() => selectedUserIds.remove(user.id));
-                //       } else {
-                //         setState(() => selectedUserIds.add(user.id));
-                //       }
-                //     },
-                //   );
-                // },
                 filter: (value) => loadedUsers
                     .where(
-                      (element) => element
-                          .data()['username']
-                          .toLowerCase()
-                          .contains(value),
+                      (element) =>
+                          element.username.toLowerCase().contains(value),
                     )
                     .toList(),
                 emptyWidget: Center(child: Text(l10n.nobodyFound)),
