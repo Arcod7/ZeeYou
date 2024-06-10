@@ -2,9 +2,7 @@
 
 Application de messagerie avec des aides pour organiser des évènements.
 
-![alt screenshot](screenshots/register.png "Register") ![alt screenshot](screenshots/home.png "Home")
-
-img[alt=screenshot] {
-  width: 200px;
-  margin: 5px;
-}
+<img src="screenshots/register.png" width="32%"/>
+<img src="screenshots/home.png" width="32%"/>
+<img src="screenshots/create_event.png" width="32%"/>
+<img src="screenshots/discussion.png" width="32%"/>

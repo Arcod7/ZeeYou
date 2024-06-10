@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:circle_flags/circle_flags.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:zeeyou/constants/keys_path.dart';
 import 'package:zeeyou/data/staff.dart';
+import 'package:zeeyou/env/env.dart';
 import 'package:zeeyou/tools/change_language.dart';
 import 'package:zeeyou/tools/text_input_decoration.dart';
 import 'package:zeeyou/tools/user_manager.dart';
@@ -315,10 +315,9 @@ class _AuthScreenState extends State<AuthScreen> {
           //         setState(() {
           //           _isAuthenticating = true;
           //         });
-          //         final String password = await readFile(KeysPath.passwordMalek);
           //         await _firebase.signInWithEmailAndPassword(
           //           email: 'test@gmail.com',
-          //           password: password,
+          //           password: Env.passwordTest,
           //         );
           //         setState(() {
           //           _isAuthenticating = false;
@@ -335,10 +334,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   setState(() {
                     _isAuthenticating = true;
                   });
-                  final String password = await readFile(KeysPath.passwordMalek);
                   await _firebase.signInWithEmailAndPassword(
                     email: 'malek@gmail.com',
-                    password: password,
+                    password: Env.passwordMalek,
                   );
                   setState(() {
                     _isAuthenticating = false;

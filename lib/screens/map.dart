@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
+import 'package:zeeyou/env/env.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -70,7 +71,7 @@ class _MapScreenState extends State<MapScreen> {
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
 
     String request =
-        '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+        '$baseURL?input=$input&key=${Env.kplacesApiKey}&sessiontoken=$_sessionToken';
     var response = await http.get(Uri.parse(request));
     if (response.statusCode == 200) {
       setState(() {
@@ -85,7 +86,7 @@ class _MapScreenState extends State<MapScreen> {
     const String baseUrl =
         'https://maps.googleapis.com/maps/api/place/details/json';
     String request =
-        '$baseUrl?place_id=$placeId&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+        '$baseUrl?place_id=$placeId&key=${Env.kplacesApiKey}&sessiontoken=$_sessionToken';
 
     var response = await http.get(Uri.parse(request));
     if (response.statusCode == 200) {
