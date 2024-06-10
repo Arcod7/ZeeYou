@@ -57,7 +57,7 @@ class _AuthScreenState extends State<AuthScreen> {
     await userDocumentRef.collection('staff_chat').add({
       'text': staffChatWelcomeMessage,
       'createdAt': Timestamp.now(),
-      'userId': adminUid,
+      'userId': Env.adminUid,
       'username': 'Antoine',
       'userImage': defaultUserImageUrl,
     });

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:zeeyou/data/staff.dart';
+import 'package:zeeyou/env/env.dart';
 import 'package:zeeyou/screens/admin_chat.dart';
 import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/screens/donate.dart';
@@ -45,7 +45,7 @@ class MoreButton extends StatelessWidget {
 
     return PopupMenuButton(
       itemBuilder: (ctx) => [
-        if (loggedUserId == adminUid)
+        if (loggedUserId == Env.adminUid)
           PopupMenuItem(
             value: 'admin_chat',
             child: MoreButtonItem(

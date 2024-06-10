@@ -14,4 +14,6 @@ final class Env {
   static final String passwordMalek = _Env.passwordMalek;
   @EnviedField(varName: 'PASSWORD_TEST', obfuscate: true)
   static final String passwordTest = _Env.passwordTest;
+  @EnviedField(varName: 'ADMIN_UID', obfuscate: true)
+  static final String adminUid = _Env.adminUid;
 }
