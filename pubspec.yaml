@@ -34,22 +34,22 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  firebase_core: ^2.15.0
-  firebase_auth: ^4.7.2
-  firebase_storage: ^11.2.5
+  firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
+  firebase_storage: ^12.0.0
   image_picker: ^1.0.1
-  cloud_firestore: ^4.8.4
-  firebase_messaging: ^14.6.5
+  cloud_firestore: ^5.0.0
+  firebase_messaging: ^15.0.0
   intl: any
   material_design_icons_flutter: ^7.0.7296
   uuid: ^4.1.0
   flutter_launcher_icons: ^0.13.1
   google_maps_flutter: ^2.4.0
   http: ^1.1.0
-  location: ^5.0.1
+  location: ^6.0.2
   flutter_iconpicker: ^3.2.4
   flutter_riverpod: ^2.3.6
-  searchable_listview: '2.7.1'
+  searchable_listview: ^2.14.0
   url_launcher: ^6.1.12
   flutter_localizations:
     sdk: flutter
@@ -60,10 +60,10 @@ dependencies:
   cached_network_image: ^3.2.3
   ensure_visible_when_focused: ^1.1.1
   google_sign_in: ^6.1.5
-  circle_flags: ^3.0.1
+  circle_flags: ^5.0.0
   settings_ui: ^2.0.2
   badges: ^3.1.2
-  photo_view: ^0.14.0
+  photo_view: ^0.15.0
   envied: ^0.5.4+1
 
 dev_dependencies:
@@ -75,7 +75,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
   envied_generator: ^0.5.4+1
   build_runner: ^2.4.11
 

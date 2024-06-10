@@ -101,30 +101,33 @@ class _UsersListScreenState extends State<UsersListScreen> {
               padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
               child: SearchableList(
                 initialList: loadedUsers,
-                builder: (a, userId, b) {
-                  final user = loadedUsers[userId];
-                  final loadedUser = user.data();
-
-                  if (user.id == loggedUserId ||
-                      (widget.filterIn != null &&
-                          !widget.filterIn!.contains(user.id)) ||
-                      (widget.filterNotIn != null &&
-                          widget.filterNotIn!.contains(user.id))) {
-                    return const SizedBox();
-                  }
-
-                  return UserTile(
-                    loadedUser: loadedUser,
-                    isChecked: selectedUserIds.contains(user.id),
-                    onSelectedUser: () {
-                      if (selectedUserIds.contains(user.id)) {
-                        setState(() => selectedUserIds.remove(user.id));
-                      } else {
-                        setState(() => selectedUserIds.add(user.id));
-                      }
-                    },
-                  );
+                itemBuilder: (snapshot) {
+                  return Placeholder();
                 },
+                // itemBuilder: (a, userId, b) {
+                //   final user = loadedUsers[userId];
+                //   final loadedUser = user.data();
+
+                //   if (user.id == loggedUserId ||
+                //       (widget.filterIn != null &&
+                //           !widget.filterIn!.contains(user.id)) ||
+                //       (widget.filterNotIn != null &&
+                //           widget.filterNotIn!.contains(user.id))) {
+                //     return const SizedBox();
+                //   }
+
+                //   return UserTile(
+                //     loadedUser: loadedUser,
+                //     isChecked: selectedUserIds.contains(user.id),
+                //     onSelectedUser: () {
+                //       if (selectedUserIds.contains(user.id)) {
+                //         setState(() => selectedUserIds.remove(user.id));
+                //       } else {
+                //         setState(() => selectedUserIds.add(user.id));
+                //       }
+                //     },
+                //   );
+                // },
                 filter: (value) => loadedUsers
                     .where(
                       (element) => element

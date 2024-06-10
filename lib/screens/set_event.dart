@@ -37,7 +37,7 @@ class SetEventScreen extends StatefulWidget {
 class _SetEventScreenState extends State<SetEventScreen>
     with SingleTickerProviderStateMixin {
   void _pickIcon(AppLocalizations l10n) async {
-    IconData? icon = await FlutterIconPicker.showIconPicker(
+    IconData? icon = await showIconPicker(
       context,
       customIconPack: iconMap,
       iconPackModes: [

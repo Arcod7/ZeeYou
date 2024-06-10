@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:zeeyou/tools/google_api_key.dart';
 
 class WaitBeforePop extends StatelessWidget {
   const WaitBeforePop({super.key});
