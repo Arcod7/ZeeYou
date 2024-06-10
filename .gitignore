@@ -49,5 +49,6 @@ GoogleService-Info.plist
 keys
 firebase_options.dart
 .env
+.passwords
 env.g.dart
 pubspec.lock
