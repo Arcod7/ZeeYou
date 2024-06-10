@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:zeeyou/keys/maps_api_key.dart';
+import 'package:zeeyou/env/env.dart';
 import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/providers/current_location_provider.dart';
@@ -37,7 +37,7 @@ class _LinkLocationState extends ConsumerState<LinkLocation> {
 
   Future<PlaceLocation> _savePlace(double lat, double lng) async {
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$mapsApiKey');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=${Env.mapsApiKey}');
 
     final response = await http.get(url);
     final resData = json.decode(response.body);
