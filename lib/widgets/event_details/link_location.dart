@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,6 +70,7 @@ class _LinkLocationState extends ConsumerState<LinkLocation> {
 
     serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
+      location.requestPermission();
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
         return null;
@@ -77,7 +79,12 @@ class _LinkLocationState extends ConsumerState<LinkLocation> {
 
     permissionGranted = await location.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
+      if (Platform.isIOS) {
+        permissionGranted = await location.requestPermission();
+
+      } else {
+        permissionGranted = await location.requestPermission();
+      }
       if (permissionGranted != PermissionStatus.granted) {
         return null;
       }
@@ -87,7 +94,14 @@ class _LinkLocationState extends ConsumerState<LinkLocation> {
       _isGettingLocation = true;
     });
 
-    locationData = await location.getLocation();
+    print('Getting location');
+    try {
+      locationData = await location.getLocation();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    print('Got location');
     final lat = locationData.latitude;
     final lng = locationData.longitude;
 
