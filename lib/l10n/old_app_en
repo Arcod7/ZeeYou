@@ -43,11 +43,13 @@
   
   "waitHere": "Wait !",
   "reallyWantToDelete": "Do you really want to delete this event ?",
+  "reallyWantToDeleteAccount": "Do you really want to delete your account ? It won't be possible to recover it.",
   
   "adminChat": "King's chat",
   "staffChat": "Chat with us",
   "donate": "Donate",
   "logOut": "Log out",
+  "deleteAccount": "Delete account",
   "language": "Language",
   "settings": "Settings",
   "save": "Save",

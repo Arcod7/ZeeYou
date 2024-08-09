@@ -147,13 +147,13 @@ class _LinkLocationState extends ConsumerState<LinkLocation> {
       onTap: () async {
         PlaceLocation? actualLocation;
         final currentLocation = ref.watch(currentLocationProvider);
-        if (widget.creatingEvent && currentLocation == null) {
-          actualLocation = await _getCurrentLocation();
-          if (actualLocation != null) {
-            ref.watch(currentLocationProvider.notifier).state = actualLocation;
-            // widget.onCurrentLocationGet(actualLocation);
-          }
-        }
+        // if (widget.creatingEvent && currentLocation == null) {
+        //   actualLocation = await _getCurrentLocation();
+        //   if (actualLocation != null) {
+        //     ref.watch(currentLocationProvider.notifier).state = actualLocation;
+        //     // widget.onCurrentLocationGet(actualLocation);
+        //   }
+        // }
         _selectOnMap(actualLocation ?? currentLocation);
       },
       isGetting: _isGettingLocation,

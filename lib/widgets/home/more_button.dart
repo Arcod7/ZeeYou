@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zeeyou/env/env.dart';
 import 'package:zeeyou/screens/admin_chat.dart';
 import 'package:zeeyou/screens/chat.dart';
+import 'package:zeeyou/screens/delete_account.dart';
 import 'package:zeeyou/screens/donate.dart';
 import 'package:zeeyou/screens/settings.dart';
 import 'package:zeeyou/tools/change_language.dart';
@@ -74,13 +75,13 @@ class MoreButton extends StatelessWidget {
           ),
           onTap: () => changeLanguage(context),
         ),
-        PopupMenuItem(
-          value: 'settings',
-          child: MoreButtonItem(
-            icon: Icons.settings_outlined,
-            label: l10n.settings,
-          ),
-        ),
+        // PopupMenuItem(
+        //   value: 'settings',
+        //   child: MoreButtonItem(
+        //     icon: Icons.settings_outlined,
+        //     label: l10n.settings,
+        //   ),
+        // ),
         PopupMenuItem(
           child: MoreButtonItem(
             icon: Icons.exit_to_app,
@@ -93,6 +94,15 @@ class MoreButton extends StatelessWidget {
                 .then((prefs) => prefs.remove('currentUserImageUrl'));
           },
         ),
+        PopupMenuItem(
+          child: MoreButtonItem(
+            icon: Icons.delete_forever,
+            label: l10n.deleteAccount,
+          ),
+          onTap: () {
+            showDeleteAccountDialog(context: context);
+          },
+        )
       ],
       onSelected: (value) {
         if (value == 'chat') {

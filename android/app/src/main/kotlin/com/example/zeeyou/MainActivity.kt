@@ -1,4 +1,4 @@
-package com.example.zeeyou
+package com.arcod.zeeyou
 
 import io.flutter.embedding.android.FlutterActivity
 
