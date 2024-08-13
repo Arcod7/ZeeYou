@@ -83,15 +83,15 @@ class _AppState extends State<App> {
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SplashScreen();
-          }
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return const SplashScreen();
+          // }
           if (snapshot.hasData) {
             if (creatingAccount) {
               return Scaffold(
-                  appBar: AppBar(title: const Text('Creating account')),
-                  body: const Center(
-                      child: CircularProgressIndicator.adaptive()));
+                appBar: AppBar(title: const Text('Creating account')),
+                body: const Center(child: CircularProgressIndicator.adaptive()),
+              );
             }
             // return const ThemeTestScreen();
             return const HomeScreen();

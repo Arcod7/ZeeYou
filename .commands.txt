@@ -5,3 +5,9 @@ flutter pub run flutter_launcher_icons
 # Build Android apk
 flutter build apk --release --no-tree-shake-icons
 
+# Build Production
+## Android
+flutter build 
+
+## iOS
+flutter build ipa --release --no-tree-shake-icons --obfuscate --split-debug-info=obfuscat
