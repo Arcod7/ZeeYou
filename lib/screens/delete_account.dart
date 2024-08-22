@@ -57,7 +57,6 @@ Future<void> showDeleteAccountDialog({required BuildContext context}) async {
 
 Future<void> _reauthenticateAndDelete({required BuildContext context}) async {
   final firebaseAuth = FirebaseAuth.instance;
-  print("reauth");
   try {
     final providerData = firebaseAuth.currentUser?.providerData.first;
 

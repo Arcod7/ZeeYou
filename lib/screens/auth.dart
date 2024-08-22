@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:circle_flags/circle_flags.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:zeeyou/data/staff.dart';
 import 'package:zeeyou/env/env.dart';
 import 'package:zeeyou/tools/change_language.dart';
@@ -87,13 +88,16 @@ class _AuthScreenState extends State<AuthScreen> {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
 
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child('${userCredentials.user!.uid}.jpg');
+        String imageUrl = "https://picsum.photos/400/";
+        if (_selectedImage != null) {
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('user_images')
+              .child('${userCredentials.user!.uid}.jpg');
 
-        await storageRef.putFile(_selectedImage!);
-        final imageUrl = await storageRef.getDownloadURL();
+          await storageRef.putFile(_selectedImage!);
+          imageUrl = await storageRef.getDownloadURL();
+        }
 
         await _createAccountInFirebase(
             userCredentials, _enteredUserName, _enteredEmail, imageUrl);
@@ -142,6 +146,55 @@ class _AuthScreenState extends State<AuthScreen> {
       String username = gUser.displayName ?? gUser.email.split('@')[0];
       await _createAccountInFirebase(
           userCredentials, username, gUser.email, userImageUrl);
+    }
+  }
+
+  void _signInWithApple(AppLocalizations l10n) async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      if (appleCredential.identityToken == null) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(l10n.failedToConnect)));
+        }
+        return;
+      }
+      final AppleFullPersonName fullAppleName = AppleFullPersonName(
+        givenName: appleCredential.givenName,
+        familyName: appleCredential.familyName,
+      );
+      final AuthCredential credential = AppleAuthProvider.credentialWithIDToken(
+        appleCredential.identityToken!,
+        generateNonce(),
+        fullAppleName,
+      );
+
+      final userCredentials = await _firebase.signInWithCredential(credential);
+
+      final userDocumentRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredentials.user!.uid);
+
+      final userDocument = await userDocumentRef.get();
+      if (userDocument.data() == null) {
+        await _createAccountInFirebase(
+            userCredentials,
+            fullAppleName.toString(),
+            appleCredential.email ?? "noemail",
+            "https://picsum.photos/400/");
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.failedToConnect)));
+      }
     }
   }
 
@@ -298,6 +351,14 @@ class _AuthScreenState extends State<AuthScreen> {
                           icon: Icon(MdiIcons.google),
                           label: Text(l10n.signInGoogle),
                         ),
+                        if (Platform.isIOS)
+                          OutlinedButton.icon(
+                            onPressed: !_isAuthenticating
+                                ? () => _signInWithApple(l10n)
+                                : null,
+                            icon: Icon(MdiIcons.apple),
+                            label: Text(l10n.signInApple),
+                          ),
                       ],
                     ),
                   ),

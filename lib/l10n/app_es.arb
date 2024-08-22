@@ -76,5 +76,6 @@
   "pleasePickAnImage": "Por favor, selecciona una imagen",
   "howGoodMemory": "Entonces, ¿tienes buena memoria?",
   "or": "O",
-  "signInGoogle": "Iniciar sesión con Google"
+  "signInGoogle": "Iniciar sesión con Google",
+  "signInApple": "Iniciar sessión con Apple"
 }

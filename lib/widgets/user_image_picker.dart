@@ -11,7 +11,7 @@ class UserImagePicker extends StatefulWidget {
     required this.onPickImage,
   });
 
-  final void Function(File pickedImage) onPickImage;
+  final void Function(File? pickedImage) onPickImage;
 
   @override
   State<UserImagePicker> createState() => _UserImagePickerState();
@@ -42,9 +42,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return FormField<File>(
-      onSaved: (value) => widget.onPickImage(value!),
+      onSaved: (value) => widget.onPickImage(value),
       validator: (value) {
-        if (value == null) {
+        if (value == null && !Platform.isIOS) {
           return l10n.pleasePickAnImage;
         }
         return null;

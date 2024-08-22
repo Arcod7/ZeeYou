@@ -76,5 +76,6 @@
   "pleasePickAnImage": "Please pick an image",
   "howGoodMemory": "How good is your memory ?",
   "or": "OR",
-  "signInGoogle": "Sign in with Google"
+  "signInGoogle": "Sign in with Google",
+  "signInApple": "Sign in with Apple"
 }

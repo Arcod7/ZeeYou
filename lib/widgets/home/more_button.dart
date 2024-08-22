@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -61,13 +63,14 @@ class MoreButton extends StatelessWidget {
             label: l10n.staffChat,
           ),
         ),
-        PopupMenuItem(
-          value: 'donate',
-          child: MoreButtonItem(
-            icon: MdiIcons.piggyBankOutline,
-            label: l10n.donate,
+        if (!Platform.isIOS)
+          PopupMenuItem(
+            value: 'donate',
+            child: MoreButtonItem(
+              icon: MdiIcons.piggyBankOutline,
+              label: l10n.donate,
+            ),
           ),
-        ),
         PopupMenuItem(
           child: MoreButtonItem(
             icon: Icons.language_outlined,
