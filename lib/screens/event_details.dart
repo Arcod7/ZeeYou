@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/set_event.dart';
+import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/adaptive_alert_dialog.dart';
 import 'package:zeeyou/widgets/event_details/add_remove_users.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
@@ -103,6 +104,20 @@ class EventDetailsScreen extends StatelessWidget {
                 // ),
                 const SizedBox(height: 15),
                 AddRemoveUsers(event: event),
+                ElevatedButton(
+                  onPressed: () async {
+                    await FirebaseFirestore.instance
+                        .collection('events')
+                        .doc(event.id)
+                        .update({
+                      "user_list": FieldValue.arrayRemove([loggedUserId])
+                    });
+                    // TODO: should navigate to Home
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(l10n.leaveEvent),
+                ),
+
                 //TODO: put these somewhere else
                 // FunctionContainer(
                 //   colors: event.colors,

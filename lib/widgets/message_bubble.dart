@@ -58,7 +58,7 @@ class MessageBubble extends StatelessWidget {
               ),
             ),
         GestureDetector(
-          onLongPress: () => chatCollectionRef.doc(messageId).delete(),
+          // onLongPress: () => chatCollectionRef.doc(messageId).delete(),
           onDoubleTap: () {
             chatCollectionRef.doc(messageId).update({
               'isLiked': !(isMessageLiked ?? false),

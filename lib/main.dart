@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:motion/motion.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zeeyou/firebase_options.dart';
 import 'package:zeeyou/screens/auth.dart';
@@ -14,6 +15,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Motion.instance.initialize();
+  Motion.instance.setUpdateInterval(60.fps);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

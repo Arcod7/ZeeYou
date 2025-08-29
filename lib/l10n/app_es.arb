@@ -77,5 +77,6 @@
   "howGoodMemory": "Entonces, ¿tienes buena memoria?",
   "or": "O",
   "signInGoogle": "Iniciar sesión con Google",
-  "signInApple": "Iniciar sessión con Apple"
+  "signInApple": "Iniciar sessión con Apple",
+  "leaveEvent": "Abandonar el evento"
 }

@@ -77,5 +77,6 @@
   "howGoodMemory": "How good is your memory ?",
   "or": "OR",
   "signInGoogle": "Sign in with Google",
-  "signInApple": "Sign in with Apple"
+  "signInApple": "Sign in with Apple",
+  "leaveEvent": "Leave the event"
 }

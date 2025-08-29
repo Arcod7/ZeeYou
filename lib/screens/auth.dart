@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:circle_flags/circle_flags.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:motion/motion.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:zeeyou/data/staff.dart';
 import 'package:zeeyou/env/env.dart';
@@ -218,15 +219,16 @@ class _AuthScreenState extends State<AuthScreen> {
             child: const DecorationCircle(),
           ),
           Positioned.fill(
-              top: 80,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(_isLogin ? l10n.connection : l10n.createAccount,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineLarge!
-                        .copyWith(color: Colors.black87)),
-              )),
+            top: 80,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Text(_isLogin ? l10n.connection : l10n.createAccount,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(color: Colors.black87)),
+            ),
+          ),
           Positioned(
               top: screenSize.height - 50 - 20,
               left: 15,
@@ -236,130 +238,136 @@ class _AuthScreenState extends State<AuthScreen> {
                       Localizations.localeOf(context).languageCode)))),
           Center(
             child: SingleChildScrollView(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(35)),
+              child: Container(
                 margin: const EdgeInsets.only(
                   left: 35,
                   right: 35,
                   top: 90,
                 ),
-                child: Container(
-                  padding: const EdgeInsets.only(
-                      left: 28, right: 28, top: 20, bottom: 15),
-                  child: Form(
-                    key: _form,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        if (_isLogin)
-                          Text(
-                            l10n.howGoodMemory,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        if (_isLogin) const SizedBox(height: 20),
-                        if (!_isLogin)
-                          UserImagePicker(
-                            onPickImage: (image) => _selectedImage = image,
-                          ),
-                        if (!_isLogin)
-                          TextFormField(
-                            decoration: textInputDecoration(l10n.username),
-                            enableSuggestions: false,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.trim().length < 4) {
-                                return l10n.minLetter(4);
-                              }
-                              return null;
-                            },
-                            onSaved: (value) => _enteredUserName = value!,
-                          ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          decoration: textInputDecoration(l10n.email),
-                          keyboardType: TextInputType.emailAddress,
-                          autocorrect: false,
-                          textCapitalization: TextCapitalization.none,
-                          validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty ||
-                                !value.contains('@')) {
-                              return l10n.validEmailPlease;
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _enteredEmail = value!;
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          decoration: textInputDecoration(l10n.password),
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.trim().length < 6) {
-                              return l10n.minLetter(6);
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _enteredPassword = value!;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        ZeeButton(
-                          text: _isLogin ? l10n.connection : l10n.register,
-                          onPressed: _submit,
-                          isLoading: _isAuthenticating,
-                        ),
-                        TextButton(
-                          onPressed: !_isAuthenticating
-                              ? () {
-                                  setState(() {
-                                    _isLogin = !_isLogin;
-                                  });
+                child: Motion.elevated(
+                  borderRadius: BorderRadius.circular(35),
+                  elevation: 10,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(35)),
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 28, right: 28, top: 20, bottom: 15),
+                      child: Form(
+                        key: _form,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            if (_isLogin)
+                              Text(
+                                l10n.howGoodMemory,
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            if (_isLogin) const SizedBox(height: 20),
+                            if (!_isLogin)
+                              UserImagePicker(
+                                onPickImage: (image) => _selectedImage = image,
+                              ),
+                            if (!_isLogin)
+                              TextFormField(
+                                decoration: textInputDecoration(l10n.username),
+                                enableSuggestions: false,
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value.trim().length < 4) {
+                                    return l10n.minLetter(4);
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) => _enteredUserName = value!,
+                              ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              decoration: textInputDecoration(l10n.email),
+                              keyboardType: TextInputType.emailAddress,
+                              autocorrect: false,
+                              textCapitalization: TextCapitalization.none,
+                              validator: (value) {
+                                if (value == null ||
+                                    value.trim().isEmpty ||
+                                    !value.contains('@')) {
+                                  return l10n.validEmailPlease;
                                 }
-                              : null,
-                          child: Text(_isLogin
-                              ? l10n.createAccount
-                              : l10n.alreadyHaveAccount),
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _enteredEmail = value!;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              decoration: textInputDecoration(l10n.password),
+                              obscureText: true,
+                              validator: (value) {
+                                if (value == null || value.trim().length < 6) {
+                                  return l10n.minLetter(6);
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _enteredPassword = value!;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            ZeeButton(
+                              text: _isLogin ? l10n.connection : l10n.register,
+                              onPressed: _submit,
+                              isLoading: _isAuthenticating,
+                            ),
+                            TextButton(
+                              onPressed: !_isAuthenticating
+                                  ? () {
+                                      setState(() {
+                                        _isLogin = !_isLogin;
+                                      });
+                                    }
+                                  : null,
+                              child: Text(_isLogin
+                                  ? l10n.createAccount
+                                  : l10n.alreadyHaveAccount),
+                            ),
+                            Row(children: [
+                              Expanded(
+                                  child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: const Divider())),
+                              Text(l10n.or,
+                                  style: TextStyle(color: Colors.grey[600])),
+                              Expanded(
+                                  child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: const Divider())),
+                            ]),
+                            const SizedBox(height: 10),
+                            OutlinedButton.icon(
+                              onPressed: !_isAuthenticating
+                                  ? () => _signInWithGoogle(l10n)
+                                  : null,
+                              icon: Icon(MdiIcons.google),
+                              label: Text(l10n.signInGoogle),
+                            ),
+                            if (Platform.isIOS)
+                              OutlinedButton.icon(
+                                onPressed: !_isAuthenticating
+                                    ? () => _signInWithApple(l10n)
+                                    : null,
+                                icon: Icon(MdiIcons.apple),
+                                label: Text(l10n.signInApple),
+                              ),
+                          ],
                         ),
-                        Row(children: [
-                          Expanded(
-                              child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: const Divider())),
-                          Text(l10n.or,
-                              style: TextStyle(color: Colors.grey[600])),
-                          Expanded(
-                              child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: const Divider())),
-                        ]),
-                        const SizedBox(height: 10),
-                        OutlinedButton.icon(
-                          onPressed: !_isAuthenticating
-                              ? () => _signInWithGoogle(l10n)
-                              : null,
-                          icon: Icon(MdiIcons.google),
-                          label: Text(l10n.signInGoogle),
-                        ),
-                        if (Platform.isIOS)
-                          OutlinedButton.icon(
-                            onPressed: !_isAuthenticating
-                                ? () => _signInWithApple(l10n)
-                                : null,
-                            icon: Icon(MdiIcons.apple),
-                            label: Text(l10n.signInApple),
-                          ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
