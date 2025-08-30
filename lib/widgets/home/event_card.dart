@@ -4,7 +4,7 @@ import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/chat.dart';
 import 'package:zeeyou/screens/event_details.dart';
 import 'package:zeeyou/tools/string_extension.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class FavortiteIconButton extends StatefulWidget {

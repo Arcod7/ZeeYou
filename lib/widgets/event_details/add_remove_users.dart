@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/users_list.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 class AddRemoveUsers extends StatelessWidget {
   const AddRemoveUsers({

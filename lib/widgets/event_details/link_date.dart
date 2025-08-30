@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zeeyou/models/color_shade.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 import 'package:zeeyou/tools/string_extension.dart';
 import 'package:zeeyou/widgets/event_details/external_link.dart';
 
@@ -42,9 +42,7 @@ class _LinkDateState extends State<LinkDate> {
     final l10n = AppLocalizations.of(context)!;
     return ExternalLink(
       text: widget.date != null
-          ? DateFormat.yMMMMEEEEd(l10n.locale)
-              .format(widget.date!)
-              .capitalize()
+          ? DateFormat.yMMMMEEEEd(l10n.locale).format(widget.date!).capitalize()
           : l10n.chooseDate,
       icon: Icons.calendar_today_outlined,
       colors: widget.colors,

@@ -6,7 +6,7 @@ import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/adaptive_alert_dialog.dart';
 import 'package:zeeyou/widgets/event_details/add_remove_users.dart';
 import 'package:zeeyou/widgets/event_details/event_deails_header.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 import 'package:zeeyou/widgets/event_details/external_links.dart';
 
 class EventDetailsScreen extends StatelessWidget {

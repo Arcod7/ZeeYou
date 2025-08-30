@@ -10,7 +10,7 @@ import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/providers/current_location_provider.dart';
 import 'package:zeeyou/screens/map.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:zeeyou/widgets/event_details/external_link.dart';
@@ -81,7 +81,6 @@ class _LinkLocationState extends ConsumerState<LinkLocation> {
     if (permissionGranted == PermissionStatus.denied) {
       if (Platform.isIOS) {
         permissionGranted = await location.requestPermission();
-
       } else {
         permissionGranted = await location.requestPermission();
       }

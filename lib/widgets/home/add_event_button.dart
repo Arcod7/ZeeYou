@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/providers/events_provider.dart';
 import 'package:zeeyou/screens/set_event.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 class AddEventButton extends ConsumerWidget {
   const AddEventButton({super.key});

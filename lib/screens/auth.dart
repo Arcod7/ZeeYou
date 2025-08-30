@@ -17,7 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:zeeyou/widgets/zee_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -120,34 +120,34 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _signInWithGoogle(AppLocalizations l10n) async {
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-    if (gUser == null) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(l10n.failedToConnect)));
-      }
-      return;
-    }
-    final GoogleSignInAuthentication gAuth = await gUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
-    );
+    // final GoogleSignInAccount? gUser = await GoogleSignIn.instance.authenticate();
+    // if (gUser == null) {
+    //   if (context.mounted) {
+    //     ScaffoldMessenger.of(context).clearSnackBars();
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(SnackBar(content: Text(l10n.failedToConnect)));
+    //   }
+    //   return;
+    // }
+    // final GoogleSignInAuthentication gAuth = await gUser.authentication;
+    // final AuthCredential credential = GoogleAuthProvider.credential(
+    //   accessToken: gAuth.accessToken,
+    //   idToken: gAuth.idToken,
+    // );
 
-    final userCredentials = await _firebase.signInWithCredential(credential);
+    // final userCredentials = await _firebase.signInWithCredential(credential);
 
-    final userDocumentRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userCredentials.user!.uid);
+    // final userDocumentRef = FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(userCredentials.user!.uid);
 
-    final userDocument = await userDocumentRef.get();
-    if (userDocument.data() == null) {
-      String userImageUrl = gUser.photoUrl ?? defaultUserImageUrl;
-      String username = gUser.displayName ?? gUser.email.split('@')[0];
-      await _createAccountInFirebase(
-          userCredentials, username, gUser.email, userImageUrl);
-    }
+    // final userDocument = await userDocumentRef.get();
+    // if (userDocument.data() == null) {
+    //   String userImageUrl = gUser.photoUrl ?? defaultUserImageUrl;
+    //   String username = gUser.displayName ?? gUser.email.split('@')[0];
+    //   await _createAccountInFirebase(
+    //       userCredentials, username, gUser.email, userImageUrl);
+    // }
   }
 
   void _signInWithApple(AppLocalizations l10n) async {
@@ -350,13 +350,13 @@ class _AuthScreenState extends State<AuthScreen> {
                                       child: const Divider())),
                             ]),
                             const SizedBox(height: 10),
-                            OutlinedButton.icon(
-                              onPressed: !_isAuthenticating
-                                  ? () => _signInWithGoogle(l10n)
-                                  : null,
-                              icon: Icon(MdiIcons.google),
-                              label: Text(l10n.signInGoogle),
-                            ),
+                            // OutlinedButton.icon(
+                            //   onPressed: !_isAuthenticating
+                            //       ? () => _signInWithGoogle(l10n)
+                            //       : null,
+                            //   icon: Icon(MdiIcons.google),
+                            //   label: Text(l10n.signInGoogle),
+                            // ),
                             if (Platform.isIOS)
                               OutlinedButton.icon(
                                 onPressed: !_isAuthenticating

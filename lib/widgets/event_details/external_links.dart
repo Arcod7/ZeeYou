@@ -6,7 +6,7 @@ import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/widgets/event_details/link_date.dart';
 import 'package:zeeyou/widgets/event_details/link_location.dart';
 import 'package:zeeyou/widgets/event_details/external_link.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 class ExternalLinks extends StatefulWidget {
   const ExternalLinks({

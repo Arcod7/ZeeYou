@@ -3,7 +3,7 @@ import 'package:zeeyou/widgets/message_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 class ChatMessages extends StatelessWidget {
   const ChatMessages({

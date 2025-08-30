@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 import 'package:zeeyou/models/user.dart';
 import 'package:zeeyou/tools/user_manager.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 class UserTile extends StatelessWidget {
   const UserTile({

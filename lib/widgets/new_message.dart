@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 import 'package:zeeyou/models/color_shade.dart';
 
 class NewMessage extends StatefulWidget {
@@ -91,7 +91,8 @@ class _NewMessageState extends State<NewMessage> {
             children: [
               Expanded(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 70.0, maxHeight: 140.0),
+                  constraints:
+                      const BoxConstraints(minHeight: 70.0, maxHeight: 140.0),
                   child: TextField(
                     controller: _messageController,
                     focusNode: _focusNode,

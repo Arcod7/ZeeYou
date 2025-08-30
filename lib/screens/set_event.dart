@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_iconpicker/Models/configuration.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
-import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:zeeyou/models/event.dart';
 import 'package:zeeyou/screens/event_details.dart';
@@ -14,7 +14,7 @@ import 'package:zeeyou/tools/text_input_decoration.dart';
 import 'package:zeeyou/widgets/event_details/external_link.dart';
 import 'package:zeeyou/widgets/event_details/link_date.dart';
 import 'package:zeeyou/widgets/event_details/link_location.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 Widget inputLabel(String label, double topMargin) => Container(
     width: double.infinity,
@@ -37,23 +37,24 @@ class SetEventScreen extends StatefulWidget {
 class _SetEventScreenState extends State<SetEventScreen>
     with SingleTickerProviderStateMixin {
   void _pickIcon(AppLocalizations l10n) async {
-    IconData? icon = await showIconPicker(
+    IconPickerIcon? icon = await showIconPicker(
       context,
-      customIconPack: iconMap,
-      iconPackModes: [
-        IconPack.cupertino,
-        IconPack.fontAwesomeIcons,
-        IconPack.lineAwesomeIcons,
-        IconPack.material,
-      ],
-      showTooltips: true,
-      adaptiveDialog: true,
-      title: Text(l10n.pickAnIcon),
-      searchHintText: l10n.searchInEnglish,
+      configuration: SinglePickerConfiguration(
+        iconPackModes: [
+          IconPack.cupertino,
+          // IconPack.fontAwesomeIcons,
+          IconPack.lineAwesomeIcons,
+          IconPack.material,
+        ],
+        showTooltips: true,
+        adaptiveDialog: true,
+        title: Text(l10n.pickAnIcon),
+        searchHintText: l10n.searchInEnglish,
+      ),
     );
 
     if (icon != null) {
-      setState(() => _newEvent.icon = icon);
+      setState(() => _newEvent.icon = icon.data);
     }
   }
 

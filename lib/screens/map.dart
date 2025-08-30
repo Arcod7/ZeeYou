@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
 import 'package:zeeyou/env/env.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 import 'package:zeeyou/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:http/http.dart' as http;
 

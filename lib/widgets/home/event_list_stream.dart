@@ -5,7 +5,7 @@ import 'package:zeeyou/models/place.dart';
 import 'package:zeeyou/models/color_shade.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/home/event_card.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 class EventListStream extends StatelessWidget {
   const EventListStream({super.key});

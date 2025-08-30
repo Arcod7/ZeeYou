@@ -15,7 +15,7 @@ import 'package:zeeyou/screens/settings.dart';
 import 'package:zeeyou/tools/change_language.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 class MoreButtonItem<PopupMenuEntry> extends StatelessWidget {
   const MoreButtonItem({
@@ -91,7 +91,7 @@ class MoreButton extends StatelessWidget {
             label: l10n.logOut,
           ),
           onTap: () {
-            GoogleSignIn().signOut();
+            GoogleSignIn.instance.signOut();
             FirebaseAuth.instance.signOut();
             SharedPreferences.getInstance()
                 .then((prefs) => prefs.remove('currentUserImageUrl'));

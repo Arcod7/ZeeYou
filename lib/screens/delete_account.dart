@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zeeyou/tools/user_manager.dart';
 import 'package:zeeyou/widgets/adaptive_alert_dialog.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zeeyou/l10n/app_localizations.dart';
 
 Future<void> showDeleteAccountDialog({required BuildContext context}) async {
   final l10n = AppLocalizations.of(context)!;
